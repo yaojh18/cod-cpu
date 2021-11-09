@@ -123,11 +123,11 @@ wire[3:0]        id_alu_op;
 wire             id_pc_select;
 wire             id_imm_select;
 wire             id_branch;
-wire             id_branch_comp;
+wire             id_branch_comp; // £¿
 wire             id_jump;
 wire             id_write_mem;
 wire             id_read_mem;
-wire             id_mem_byte;
+wire             id_mem_byte; // £¿
 wire             id_write_back;
 wire[1:0]        id_wb_type;
 
@@ -170,7 +170,7 @@ assign alu_input2 = exe_imm_select ? exe_imm : exe_reg_rdata2;
 
 /* =========== EXE/MEM register ============ */
 wire          reset_exe_mem;
-assign reset_exe_mem = reset_of_clk10M;
+assign reset_exe_mem = reset_of_clk10M ;
 wire[31:0]    exe_mem_data_in;
 assign exe_mem_data_in = exe_reg_rdata2;
 wire[4:0]     mem_reg_rs1;
@@ -211,22 +211,35 @@ wire[1:0]     wb_wb_type;
 wire[31:0]    reg_wdata;
 assign reg_wdata = wb_wb_type==`WB_ALU ? wb_alu_output : (wb_wb_type==`WB_MEM ? wb_mem_data_out : wb_pc+4);
 
-// the mem stage is saving or loading data, add a nop to stall the instruction
+/* ================== IF module =================== */
+wire branch_delay_rst;
+reg branch_delay_rst_reg;
+assign  branch_delay_rst = id_jump | (id_branch & id_branch_choice);
 assign pc_next = (exe_jump | (exe_branch & exe_branch_choice)) ? exe_alu_output : ((mem_write_mem | mem_read_mem) ? pc : pc+4);
-assign if_instruction = (mem_write_mem | mem_read_mem) ? 32'h00000000 : mem_mem_data_out;
+assign if_instruction = (mem_write_mem | mem_read_mem | pc == 0) ? 32'h13 : mem_mem_data_out;
 
 always @(posedge clk_10M or posedge reset_of_clk10M) begin
     if(reset_of_clk10M) begin
-        pc = 32'h80000000;
+        branch_delay_rst_reg <= 1'b0;
+        pc <= 32'h80000000;
     end
-    else begin
-        pc = pc_next;
-    end
+    else
+        if (~branch_delay_rst_reg & branch_delay_rst) begin
+            branch_delay_rst_reg <= 1'b1;
+            pc <= 32'h0;
+        end
+        else begin
+            if (branch_delay_rst_reg & ~branch_delay_rst_reg)
+                branch_delay_rst_reg <= 1'b0;
+            pc <= pc_next;
+        end
 end
+/* ================ IF module end ================= */
 
 IF_ID_Register if_id_reg(
     .clk(clk_10M),
     .rst(reset_if_id),
+    .delay_rst(branch_delay_rst),
     .if_instruction(if_instruction),
     .if_pc(pc),
     .id_instruction(id_instruction),

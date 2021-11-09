@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Sun Nov  7 20:16:56 2021
--- Host        : DESKTOP-UMVC494 running 64-bit major release  (build 9200)
+-- Date        : Tue Nov  9 19:07:34 2021
+-- Host        : LAPTOP-OK9N2T0V running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode synth_stub
---               C:/Users/verit_v7if7au/Documents/Eris/code/verilog/cod21-grp08/thinpad_top.srcs/sources_1/ip/pll_example/pll_example_stub.vhdl
+--               E:/pipeline/thinpad_top.srcs/sources_1/ip/pll_example/pll_example_stub.vhdl
 -- Design      : pll_example
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7a100tfgg676-2L
