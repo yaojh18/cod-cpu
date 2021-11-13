@@ -7,6 +7,11 @@ module ID_EXE_Register(
         input wire[4:0]     id_reg_rs1,
         input wire[4:0]     id_reg_rs2,
         input wire[4:0]     id_reg_rd,
+        input wire[4:0]     mem_exe_reg_rd,
+        input wire[4:0]     wb_exe_reg_rd,
+        input wire[31:0]     mem_exe_alu_output,
+        input wire[31:0]     wb_exe_alu_output,
+        
         input wire[31:0]    id_imm,
         input wire[31:0]    id_reg_rdata1,
         input wire[31:0]    id_reg_rdata2,
@@ -42,6 +47,11 @@ module ID_EXE_Register(
         output reg          exe_write_back,
         output reg[1:0]     exe_wb_type
     );
+    wire[1:0] reg_rs1_conflict;
+    wire[1:0] reg_rs2_conflict;
+
+    assign reg_rs1_conflict=(mem_exe_reg_rd == id_reg_rs1)? 2'b10: ((wb_exe_reg_rd == id_reg_rs1)? 2'b01: 2'b00);
+    assign reg_rs2_conflict=(mem_exe_reg_rd == id_reg_rs2)? 2'b10: ((wb_exe_reg_rd == id_reg_rs2)? 2'b01: 2'b00);
     
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -69,8 +79,18 @@ module ID_EXE_Register(
             exe_reg_rs2 = id_reg_rs2;
             exe_reg_rd = id_reg_rd;
             exe_imm = id_imm;
-            exe_reg_rdata1 = id_reg_rdata1;
-            exe_reg_rdata2 = id_reg_rdata2;
+            if(reg_rs1_conflict==2'b10)
+                exe_reg_rdata1 = mem_exe_alu_output;
+            else if(reg_rs1_conflict==2'b01)
+                exe_reg_rdata1 = wb_exe_alu_output;
+            else
+                exe_reg_rdata1 = id_reg_rdata1;
+            if(reg_rs2_conflict==2'b10)
+                exe_reg_rdata2 = mem_exe_alu_output;
+            else if(reg_rs2_conflict==2'b01)
+                exe_reg_rdata2 = wb_exe_alu_output;
+            else
+                exe_reg_rdata2 = id_reg_rdata2;
             exe_pc = id_pc;
             exe_alu_op = id_alu_op;
             exe_pc_select = id_pc_select;

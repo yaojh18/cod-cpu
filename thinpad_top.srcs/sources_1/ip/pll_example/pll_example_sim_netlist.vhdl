@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Sun Nov  7 20:16:56 2021
--- Host        : DESKTOP-UMVC494 running 64-bit major release  (build 9200)
+-- Date        : Sat Nov 13 02:27:44 2021
+-- Host        : LAPTOP-511H9MLC running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               C:/Users/verit_v7if7au/Documents/Eris/code/verilog/cod21-grp08/thinpad_top.srcs/sources_1/ip/pll_example/pll_example_sim_netlist.vhdl
+--               D:/jizu_test/rv_7/cod21-grp08/thinpad_top.srcs/sources_1/ip/pll_example/pll_example_sim_netlist.vhdl
 -- Design      : pll_example
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
