@@ -118,25 +118,20 @@ wire[31:0] id_pc;
 wire[4:0]        id_reg_rs1;
 wire[4:0]        id_reg_rs2;
 wire[4:0]        id_reg_rd;
+wire[31:0]       id_reg_rdata1;
+wire[31:0]       id_reg_rdata2;
 wire[31:0]       id_imm;
 wire[3:0]        id_alu_op;
 wire             id_pc_select;
 wire             id_imm_select;
 wire             id_branch;
-wire             id_branch_comp; // ？
+wire             id_branch_comp;
 wire             id_jump;
 wire             id_write_mem;
 wire             id_read_mem;
-wire             id_mem_byte; // ？
+wire             id_mem_byte;
 wire             id_write_back;
 wire[1:0]        id_wb_type;
-
-/* =========== Register file =========== */
-wire[31:0] id_reg_rdata1;
-wire[31:0] id_reg_rdata2;
-wire id_branch_choice;
-// branch_comp: 0: beq, 1: bne
-assign id_branch_choice = (id_branch_comp==`BNE) ? ~(id_reg_rdata1 == id_reg_rdata2) : (id_reg_rdata1 == id_reg_rdata2);
 
 /* =========== ID/EXE register ========== */
 wire          reset_id_exe;
@@ -152,6 +147,7 @@ wire[3:0]     exe_alu_op;
 wire          exe_pc_select;
 wire          exe_imm_select;
 wire          exe_branch;
+wire          exe_branch_comp;
 wire          exe_branch_choice;
 wire          exe_jump;
 wire          exe_write_mem;
@@ -159,6 +155,7 @@ wire          exe_read_mem;
 wire          exe_mem_byte;
 wire          exe_write_back;
 wire[1:0]     exe_wb_type;
+assign exe_branch_choice = (exe_branch_comp==`BNE) ? ~(exe_reg_rdata1 == exe_reg_rdata2) : (exe_reg_rdata1 == exe_reg_rdata2);
 
 /* =========== ALU ============*/
 wire[31:0]      alu_input1;
@@ -173,8 +170,6 @@ wire          reset_exe_mem;
 assign reset_exe_mem = reset_of_clk10M ;
 wire[31:0]    exe_mem_data_in;
 assign exe_mem_data_in = exe_reg_rdata2;
-wire[4:0]     mem_reg_rs1;
-wire[4:0]     mem_reg_rs2;
 wire[4:0]     mem_reg_rd;
 wire[31:0]    mem_alu_output;
 wire[31:0]    mem_mem_data_in;
@@ -211,35 +206,33 @@ wire[1:0]     wb_wb_type;
 wire[31:0]    reg_wdata;
 assign reg_wdata = wb_wb_type==`WB_ALU ? wb_alu_output : (wb_wb_type==`WB_MEM ? wb_mem_data_out : wb_pc+4);
 
-/* ================== IF module =================== */
+/* =========== Conflict control =========== */
+// for branch conflict
 wire branch_delay_rst;
-reg branch_delay_rst_reg;
-assign branch_delay_rst = id_jump | (id_branch & id_branch_choice);
-assign pc_next = (exe_jump | (exe_branch & exe_branch_choice)) ? exe_alu_output : ((mem_write_mem | mem_read_mem) ? pc : pc+4);
-assign if_instruction = (mem_write_mem | mem_read_mem | pc == 0) ? 32'h13 : mem_mem_data_out;
+assign branch_delay_rst = exe_jump | (exe_branch & exe_branch_choice);
+wire load_delay;
+assign load_delay = exe_read_mem && (exe_reg_rd == id_reg_rs1 || exe_reg_rd == id_reg_rs2);
+
+// for data conflict
+wire[31:0] wb_exe_reg_data;
+assign wb_exe_reg_data = mem_wb_type==`WB_ALU ? mem_alu_output : (mem_wb_type==`WB_MEM ? mem_mem_data_out : mem_pc+4);
+
+/* ================== IF module =================== */
+assign pc_next = branch_delay_rst ? exe_alu_output : ((mem_write_mem | mem_read_mem | load_delay) ? pc : pc+4);
+assign if_instruction = (mem_write_mem | mem_read_mem) ? 32'h13 : mem_mem_data_out;
 
 always @(posedge clk_10M or posedge reset_of_clk10M) begin
-    if(reset_of_clk10M) begin
-        branch_delay_rst_reg <= 1'b0;
+    if(reset_of_clk10M)
         pc <= 32'h80000000;
-    end
     else
-        if (~branch_delay_rst_reg & branch_delay_rst) begin
-            branch_delay_rst_reg <= 1'b1;
-            pc <= 32'h0;
-        end
-        else begin
-            if (branch_delay_rst_reg & ~branch_delay_rst_reg)
-                branch_delay_rst_reg <= 1'b0;
-            pc <= pc_next;
-        end
+        pc <= pc_next;
 end
-/* ================ IF module end ================= */
 
 IF_ID_Register if_id_reg(
     .clk(clk_10M),
     .rst(reset_if_id),
     .delay_rst(branch_delay_rst),
+    .delay(load_delay),
     .if_instruction(if_instruction),
     .if_pc(pc),
     .id_instruction(id_instruction),
@@ -274,32 +267,22 @@ RegFile reg_file(
     .raddr1(id_reg_rs1),
     .raddr2(id_reg_rs2),
     .rdata1(id_reg_rdata1),
-    .rdata2(id_reg_rdata2)
+    .rdata2(id_reg_rdata2),
+    .out(leds)
 );
 /* ================ forward part================= */
-wire[4:0]     mem_exe_reg_rd;
-assign mem_exe_reg_rd = exe_reg_rd;
-wire[4:0]     wb_exe_reg_rd;
-assign wb_exe_reg_rd = mem_reg_rd;
-wire[31:0]     mem_exe_alu_output;
-assign mem_exe_alu_output = exe_alu_output;
-wire[31:0]     wb_exe_alu_output;
-assign wb_exe_alu_output = mem_alu_output;
-wire[1:0]     exe_id_wb_type;
-assign exe_id_wb_type = exe_wb_type;
-wire[1:0]     load_use_in_out;
 
 ID_EXE_Register id_exe_reg(
     .clk(clk_10M),
     .rst(reset_id_exe),
+    .delay_rst(branch_delay_rst | load_delay),
+    .mem_exe_reg_rd(exe_reg_rd),
+    .wb_exe_reg_rd(mem_reg_rd),
+    .mem_exe_reg_data(exe_alu_output),
+    .wb_exe_reg_data(wb_exe_reg_data),
     .id_reg_rs1(id_reg_rs1),
     .id_reg_rs2(id_reg_rs2),
     .id_reg_rd(id_reg_rd),
-    .mem_exe_reg_rd(mem_exe_reg_rd),
-    .wb_exe_reg_rd(wb_exe_reg_rd),
-    .mem_exe_alu_output(mem_exe_alu_output),
-    .wb_exe_alu_output(wb_exe_alu_output),
-    .mem_exe_out_data(mem_mem_data_out),
     .id_imm(id_imm),
     .id_reg_rdata1(id_reg_rdata1),
     .id_reg_rdata2(id_reg_rdata2),
@@ -308,16 +291,13 @@ ID_EXE_Register id_exe_reg(
     .id_pc_select(id_pc_select),
     .id_imm_select(id_imm_select),
     .id_branch(id_branch),
-    .id_branch_choice(id_branch_choice),
+    .id_branch_comp(id_branch_comp),
     .id_jump(id_jump),
     .id_write_mem(id_write_mem),
     .id_read_mem(id_read_mem),
     .id_mem_byte(id_mem_byte),
     .id_write_back(id_write_back),
     .id_wb_type(id_wb_type),
-    .exe_id_wb_type(exe_id_wb_type),
-    .load_use_in(load_use_in_out),
-    .load_use_out(load_use_in_out),
     .exe_reg_rs1(exe_reg_rs1),
     .exe_reg_rs2(exe_reg_rs2),
     .exe_reg_rd(exe_reg_rd),
@@ -329,7 +309,7 @@ ID_EXE_Register id_exe_reg(
     .exe_pc_select(exe_pc_select),
     .exe_imm_select(exe_imm_select),
     .exe_branch(exe_branch),
-    .exe_branch_choice(exe_branch_choice),
+    .exe_branch_comp(exe_branch_comp),
     .exe_jump(exe_jump),
     .exe_write_mem(exe_write_mem),
     .exe_read_mem(exe_read_mem),
@@ -349,8 +329,6 @@ ALU alu(
 EXE_MEM_Register exe_mem_reg(
     .clk(clk_10M),
     .rst(reset_exe_mem),
-    .exe_reg_rs1(exe_reg_rs1),
-    .exe_reg_rs2(exe_reg_rs2),
     .exe_reg_rd(exe_reg_rd),
     .exe_alu_output(exe_alu_output),
     .exe_mem_data_in(exe_mem_data_in),
@@ -360,8 +338,6 @@ EXE_MEM_Register exe_mem_reg(
     .exe_mem_byte(exe_mem_byte),
     .exe_write_back(exe_write_back),
     .exe_wb_type(exe_wb_type),
-    .mem_reg_rs1(mem_reg_rs1),
-    .mem_reg_rs2(mem_reg_rs2),
     .mem_reg_rd(mem_reg_rd),
     .mem_alu_output(mem_alu_output),
     .mem_mem_data_in(mem_mem_data_in),
@@ -423,117 +399,4 @@ MEM_WB_Register mem_wb_reg(
     .wb_write_back(wb_write_back),
     .wb_wb_type(wb_wb_type)
 );
-
-
-/* =========== Demo code begin =========== */
-
-//always@(posedge clk_10M or posedge reset_of_clk10M) begin
-//    if(reset_of_clk10M)begin
-//        // Your Code
-//    end
-//    else begin
-//        // Your Code
-//    end
-//end
-
-// 不使用内存、串口时，禁用其使能信号
-//assign base_ram_ce_n = 1'b1;
-//assign base_ram_oe_n = 1'b1;
-//assign base_ram_we_n = 1'b1;
-
-//assign ext_ram_ce_n = 1'b1;
-//assign ext_ram_oe_n = 1'b1;
-//assign ext_ram_we_n = 1'b1;
-
-//assign uart_rdn = 1'b1;
-//assign uart_wrn = 1'b1;
-
-// 数码管连接关系示意图，dpy1同理
-// p=dpy0[0] // ---a---
-// c=dpy0[1] // |     |
-// d=dpy0[2] // f     b
-// e=dpy0[3] // |     |
-// b=dpy0[4] // ---g---
-// a=dpy0[5] // |     |
-// f=dpy0[6] // e     c
-// g=dpy0[7] // |     |
-//           // ---d---  p
-
-// 7段数码管译码器演示，将number用16进制显示在数码管上面
-//wire[7:0] number;
-//SEG7_LUT segL(.oSEG1(dpy0), .iDIG(number[3:0])); //dpy0是低位数码管
-//SEG7_LUT segH(.oSEG1(dpy1), .iDIG(number[7:4])); //dpy1是高位数码管
-
-//reg[15:0] led_bits;
-//assign leds = led_bits;
-
-//always@(posedge clock_btn or posedge reset_btn) begin
-//    if(reset_btn)begin //复位按下，设置LED为初始值
-//        led_bits <= 16'h1;
-//    end
-//    else begin //每次按下时钟按钮，LED循环左移
-//        led_bits <= {led_bits[14:0],led_bits[15]};
-//    end
-//end
-
-//直连串口接收发送演示，从直连串口收到的数据再发送出去
-//wire [7:0] ext_uart_rx;
-//reg  [7:0] ext_uart_buffer, ext_uart_tx;
-//wire ext_uart_ready, ext_uart_clear, ext_uart_busy;
-//reg ext_uart_start, ext_uart_avai;
-    
-//assign number = ext_uart_buffer;
-
-//async_receiver #(.ClkFrequency(50000000),.Baud(9600)) //接收模块，9600无检验位
-//    ext_uart_r(
-//        .clk(clk_50M),                       //外部时钟信号
-//        .RxD(rxd),                           //外部串行信号输入
-//        .RxD_data_ready(ext_uart_ready),  //数据接收到标志
-//        .RxD_clear(ext_uart_clear),       //清除接收标志
-//        .RxD_data(ext_uart_rx)             //接收到的一字节数据
-//    );
-
-//assign ext_uart_clear = ext_uart_ready; //收到数据的同时，清除标志，因为数据已取到ext_uart_buffer中
-//always @(posedge clk_50M) begin //接收到缓冲区ext_uart_buffer
-//    if(ext_uart_ready)begin
-//        ext_uart_buffer <= ext_uart_rx;
-//        ext_uart_avai <= 1;
-//    end else if(!ext_uart_busy && ext_uart_avai)begin 
-//        ext_uart_avai <= 0;
-//    end
-//end
-//always @(posedge clk_50M) begin //将缓冲区ext_uart_buffer发送出去
-//    if(!ext_uart_busy && ext_uart_avai)begin 
-//        ext_uart_tx <= ext_uart_buffer;
-//        ext_uart_start <= 1;
-//    end else begin 
-//        ext_uart_start <= 0;
-//    end
-//end
-
-//async_transmitter #(.ClkFrequency(50000000),.Baud(9600)) //发送模块，9600无检验位
-//    ext_uart_t(
-//        .clk(clk_50M),                  //外部时钟信号
-//        .TxD(txd),                      //串行信号输出
-//        .TxD_busy(ext_uart_busy),       //发送器忙状态指示
-//        .TxD_start(ext_uart_start),    //开始发送信号
-//        .TxD_data(ext_uart_tx)        //待发送的数据
-//    );
-
-//图像输出演示，分辨率800x600@75Hz，像素时钟为50MHz
-//wire [11:0] hdata;
-//assign video_red = hdata < 266 ? 3'b111 : 0; //红色竖条
-//assign video_green = hdata < 532 && hdata >= 266 ? 3'b111 : 0; //绿色竖条
-//assign video_blue = hdata >= 532 ? 2'b11 : 0; //蓝色竖条
-//assign video_clk = clk_50M;
-//vga #(12, 800, 856, 976, 1040, 600, 637, 643, 666, 1, 1) vga800x600at75 (
-//    .clk(clk_50M), 
-//    .hdata(hdata), //横坐标
-//    .vdata(),      //纵坐标
-//    .hsync(video_hsync),
-//    .vsync(video_vsync),
-//    .data_enable(video_de)
-//);
-/* =========== Demo code end =========== */
-
 endmodule

@@ -21,20 +21,20 @@ module MEM_WB_Register(
     
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            wb_reg_rd = 5'b00000;
-            wb_alu_output = 32'h00000000;
-            wb_mem_data_out = 32'h00000000;
-            wb_pc = 32'h00000000;
-            wb_write_back = 1'b0;
-            wb_wb_type = `WB_ALU;
+            wb_reg_rd <= 5'b00000;
+            wb_alu_output <= 32'h00000000;
+            wb_mem_data_out <= 32'h00000000;
+            wb_pc <= 32'h00000000;
+            wb_write_back <= 1'b0;
+            wb_wb_type <= `WB_ALU;
         end
         else begin
-            wb_reg_rd = mem_reg_rd;
-            wb_alu_output = mem_alu_output;
-            wb_mem_data_out = mem_mem_data_out;
-            wb_pc = mem_pc;
-            wb_write_back = mem_write_back;
-            wb_wb_type = mem_wb_type;
+            wb_reg_rd <= mem_reg_rd;
+            wb_alu_output <= mem_alu_output;
+            wb_mem_data_out <= mem_mem_data_out;
+            wb_pc <= mem_pc;
+            wb_write_back <= mem_write_back;
+            wb_wb_type <= mem_wb_type;
         end
     end
     
