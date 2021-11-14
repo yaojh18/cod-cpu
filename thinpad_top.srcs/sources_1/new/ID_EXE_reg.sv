@@ -113,18 +113,15 @@ module ID_EXE_Register(
             exe_reg_rs2 = id_reg_rs2;
             exe_reg_rd = id_reg_rd;
             exe_imm = id_imm;
-            if(load_use_in == 2'b11) begin
-                exe_reg_rdata1 = mem_exe_out_data;
-                exe_reg_rdata2 = mem_exe_out_data;
-            end
-            else if(load_use_in == 2'b10) begin
-                exe_reg_rdata1 = mem_exe_out_data;
-                exe_reg_rdata2 = id_reg_rdata2;
-            end
-            else if(load_use_in == 2'b01)
-            begin
-                exe_reg_rdata1 = id_reg_rdata1;
-                exe_reg_rdata2 = mem_exe_out_data;
+            if(load_use_in != 2'b00) begin
+                if(id_reg_rs1 == wb_exe_reg_rd)
+                   exe_reg_rdata1 = mem_exe_out_data;
+                else
+                   exe_reg_rdata1 = id_reg_rdata1;
+                if(id_reg_rs2 == wb_exe_reg_rd)
+                   exe_reg_rdata2 = mem_exe_out_data;
+                else
+                   exe_reg_rdata2 = id_reg_rdata2;
             end
             else begin  
                 if(reg_rs1_conflict==2'b10)

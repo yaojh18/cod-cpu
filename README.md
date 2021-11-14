@@ -58,3 +58,10 @@ testcases文件夹中为汇编测例，在文件夹中加入.s汇编代码，并
 - 不采用分支预测，假设分支失败，如果遇到成功分支则清空前两个阶段的输入（pc、id_pc、id_instruction）
 - 新增变量branch_delay_rst作为分支成功的信号，branch_delay_rst_reg寄存器用于管理此信号，IF_ID阶段的对流水线寄存器所做的操作相同。
 
+#### 2021.11.14 完成了数据冲突
+
+- 实现了写后读的操作，主要修改了ID_EXE_REG.sv文件的内容，添了几条数据旁路，来获得从MEM和WB中用到的rd寄存器和rd寄存器中的数据
+- mem_exe_reg_rd、wb_exe_reg_rd、mem_exe_alu_output、wb_exe_alu_output负责存放这些数据，
+- 使用的时候，先判断rs1或rs2是否等于mem_exe_reg_rd，在判断是否等于wb_exe_reg_rd，根据不同结果使用不同的data
+- 实现了Lw的数据冲突问题，实现方法就是判断上一步的exe_id_wb_type是不是`WB_MEM，如果是就将load_use_1、load_use_2置1并且加气泡
+- 后续传进的load_use_in结合wb_exe_reg_rd来判断哪个寄存器需要用到mem_exe_out_data
