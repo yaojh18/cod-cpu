@@ -53,25 +53,25 @@ parameter FLASH_INIT_FILE = "/tmp/kernel.elf";    //FlashЁУй╪╩╞нд╪Чё╛гКпч╦дн╙й╣╪
 assign rxd = 1'b1; //idle state
 
 initial begin 
-    //тзуБюО©иртвт╤╗рЕ╡БйтйДхКпРапё╛юЩхГё╨
+    //О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫т╤О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫пёО©╫О©╫О©╫О©╫Гё╨
 //    dip_sw = 32'h2;
     touch_btn = 0;
     reset_btn = 1;
     #100;
     reset_btn = 0;
 //    for (integer i = 0; i < 20; i = i+1) begin
-//        #100; //╣х╢Щ100ns
-//        clock_btn = 1; //╟╢обйж╧╓й╠жс╟╢е╔
-//        #100; //╣х╢Щ100ns
-//        clock_btn = 0; //ки©╙йж╧╓й╠жс╟╢е╔
+//        #100; //О©╫х╢О©╫100ns
+//        clock_btn = 1; //О©╫О©╫О©╫О©╫О©╫ж╧О©╫й╠О©╫с╟О©╫е╔
+//        #100; //О©╫х╢О©╫100ns
+//        clock_btn = 0; //О©╫и©О©╫О©╫ж╧О©╫й╠О©╫с╟О©╫е╔
 //    end
-//    // дёдБPCм╗╧Щ╢╝©з╥╒кмвж╥Ш
+//    // дёО©╫О©╫PCм╗О©╫О©╫О©╫О©╫О©╫з╥О©╫О©╫О©╫О©╫ж╥О©╫
 //    cpld.pc_send_byte(8'h32);
 //    #10000;
 //    cpld.pc_send_byte(8'h33);
 end
 
-// ╢Щ╡Бйтсц╩╖иХ╪ф
+// О©╫О©╫О©╫О©╫О©╫О©╫О©╫ц╩О©╫О©╫О©╫О©╫
 thinpad_top dut(
     .clk_50M(clk_50M),
     .clk_11M0592(clk_11M0592),
@@ -110,12 +110,12 @@ thinpad_top dut(
     .flash_byte_n(flash_byte_n),
     .flash_we_n(flash_we_n)
 );
-// й╠жст╢
+// й╠О©╫О©╫т╢
 clock osc(
     .clk_11M0592(clk_11M0592),
     .clk_50M    (clk_50M)
 );
-// CPLD ╢╝©з╥буФдёпм
+// CPLD О©╫О©╫О©╫з╥О©╫О©╫О©╫дёО©╫О©╫
 cpld_model cpld(
     .clk_uart(clk_11M0592),
     .uart_rdn(uart_rdn),
@@ -125,7 +125,7 @@ cpld_model cpld(
     .uart_tsre(uart_tsre),
     .data(base_ram_data[7:0])
 );
-// BaseRAM ╥буФдёпм
+// BaseRAM О©╫О©╫О©╫О©╫дёО©╫О©╫
 sram_model base1(/*autoinst*/
             .DataIO(base_ram_data[15:0]),
             .Address(base_ram_addr[19:0]),
@@ -142,7 +142,7 @@ sram_model base2(/*autoinst*/
             .WE_n(base_ram_we_n),
             .LB_n(base_ram_be_n[2]),
             .UB_n(base_ram_be_n[3]));
-// ExtRAM ╥буФдёпм
+// ExtRAM О©╫О©╫О©╫О©╫дёО©╫О©╫
 sram_model ext1(/*autoinst*/
             .DataIO(ext_ram_data[15:0]),
             .Address(ext_ram_addr[19:0]),
@@ -159,7 +159,7 @@ sram_model ext2(/*autoinst*/
             .WE_n(ext_ram_we_n),
             .LB_n(ext_ram_be_n[2]),
             .UB_n(ext_ram_be_n[3]));
-// Flash ╥буФдёпм
+// Flash О©╫О©╫О©╫О©╫дёО©╫О©╫
 x28fxxxp30 #(.FILENAME_MEM(FLASH_INIT_FILE)) flash(
     .A(flash_a[1+:22]), 
     .DQ(flash_d), 
@@ -182,7 +182,7 @@ initial begin
     $stop;
 end
 
-// ╢снд╪Ч╪сть BaseRAM
+// О©╫О©╫О©╫д╪О©╫О©╫О©╫О©╫О©╫ BaseRAM
 initial begin 
     reg [31:0] tmp_array[0:1048575];
     integer n_File_ID, n_Init_Size;
@@ -204,7 +204,7 @@ initial begin
     end
 end
 
-// ╢снд╪Ч╪сть ExtRAM
+// О©╫О©╫О©╫д╪О©╫О©╫О©╫О©╫О©╫ ExtRAM
 initial begin 
     reg [31:0] tmp_array[0:1048575];
     integer n_File_ID, n_Init_Size;

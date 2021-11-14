@@ -276,6 +276,15 @@ RegFile reg_file(
     .rdata1(id_reg_rdata1),
     .rdata2(id_reg_rdata2)
 );
+/* ================ forward part================= */
+wire[4:0]     mem_exe_reg_rd;
+assign mem_exe_reg_rd = mem_reg_rd;
+wire[4:0]     wb_exe_reg_rd;
+assign wb_exe_reg_rd = wb_reg_rd;
+wire[31:0]     mem_exe_alu_output;
+assign mem_exe_alu_output = mem_alu_output;
+wire[31:0]     wb_exe_alu_output;
+assign wb_exe_alu_output = wb_alu_output;
 
 ID_EXE_Register id_exe_reg(
     .clk(clk_10M),
@@ -283,6 +292,10 @@ ID_EXE_Register id_exe_reg(
     .id_reg_rs1(id_reg_rs1),
     .id_reg_rs2(id_reg_rs2),
     .id_reg_rd(id_reg_rd),
+    .mem_exe_reg_rd(mem_exe_reg_rd),
+    .wb_exe_reg_rd(wb_exe_reg_rd),
+    .mem_exe_alu_output(mem_exe_alu_output),
+    .wb_exe_alu_output(wb_exe_alu_output),
     .id_imm(id_imm),
     .id_reg_rdata1(id_reg_rdata1),
     .id_reg_rdata2(id_reg_rdata2),
