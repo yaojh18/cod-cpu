@@ -9,7 +9,7 @@ reg reset_btn = 0;         //BTN6�ֶ���λ��ť���أ����
 reg[3:0]  touch_btn;  //BTN1~BTN4����ť���أ�����ʱΪ1
 reg[31:0] dip_sw;     //32λ���뿪�أ�������ON��ʱΪ1
 
-wire[15:0] leds;       //16λLED�����ʱ1����
+wire[15:0] leds;       //16λLED������?1����
 wire[7:0]  dpy0;       //����ܵ�λ�źţ�����С���㣬���1����
 wire[7:0]  dpy1;       //����ܸ�λ�źţ�����С���㣬���1����
 
@@ -18,14 +18,14 @@ wire rxd;  //ֱ�����ڽ��ն�
 
 wire[31:0] base_ram_data; //BaseRAM���ݣ���8λ��CPLD���ڿ���������
 wire[19:0] base_ram_addr; //BaseRAM��ַ
-wire[3:0] base_ram_be_n;  //BaseRAM�ֽ�ʹ�ܣ�����Ч�������ʹ���ֽ�ʹ�ܣ��뱣��Ϊ0
+wire[3:0] base_ram_be_n;  //BaseRAM�ֽ�ʹ�ܣ�����Ч�������ʹ���ֽ�ʹ�ܣ��뱣���?0
 wire base_ram_ce_n;       //BaseRAMƬѡ������Ч
 wire base_ram_oe_n;       //BaseRAM��ʹ�ܣ�����Ч
 wire base_ram_we_n;       //BaseRAMдʹ�ܣ�����Ч
 
 wire[31:0] ext_ram_data; //ExtRAM����
 wire[19:0] ext_ram_addr; //ExtRAM��ַ
-wire[3:0] ext_ram_be_n;  //ExtRAM�ֽ�ʹ�ܣ�����Ч�������ʹ���ֽ�ʹ�ܣ��뱣��Ϊ0
+wire[3:0] ext_ram_be_n;  //ExtRAM�ֽ�ʹ�ܣ�����Ч�������ʹ���ֽ�ʹ�ܣ��뱣���?0
 wire ext_ram_ce_n;       //ExtRAMƬѡ������Ч
 wire ext_ram_oe_n;       //ExtRAM��ʹ�ܣ�����Ч
 wire ext_ram_we_n;       //ExtRAMдʹ�ܣ�����Ч
@@ -43,11 +43,11 @@ wire uart_rdn;           //�������źţ�����Ч
 wire uart_wrn;           //д�����źţ�����Ч
 wire uart_dataready;     //��������׼����
 wire uart_tbre;          //�������ݱ�־
-wire uart_tsre;          //���ݷ�����ϱ�־
+wire uart_tsre;          //���ݷ�����ϱ��?
 
 //Windows��Ҫע��·���ָ�����ת�壬����"D:\\foo\\bar.bin"
 //parameter BASE_RAM_INIT_FILE = "C:\\Users\\verit_v7if7au\\Documents\\Eris\\code\\verilog\\cod21-grp08\\testcases\\pipeline1\\code_4M.bin"; //BaseRAM��ʼ���ļ������޸�Ϊʵ�ʵľ���·��
-parameter BASE_RAM_INIT_FILE = "D:\\jizu_test\\rv_7\\cod21-grp08\\testcases\\pipeline1\\code_4M.bin"; //BaseRAM初始化文件，请修改为实际的绝对路径
+parameter BASE_RAM_INIT_FILE = "D:\\jizu_test\\rv_7\\cod21-grp08\\testcases\\pipeline1\\code_4M.bin"; //BaseRAM初始化文件，请修改为实际的绝对路�?
 parameter EXT_RAM_INIT_FILE = "/tmp/eram.bin";    //ExtRAM��ʼ���ļ������޸�Ϊʵ�ʵľ���·��
 parameter FLASH_INIT_FILE = "/tmp/kernel.elf";    //Flash��ʼ���ļ������޸�Ϊʵ�ʵľ���·��
 
@@ -72,7 +72,7 @@ initial begin
 //    cpld.pc_send_byte(8'h33);
 end
 
-// �������û����
+// �������û����?
 thinpad_top dut(
     .clk_50M(clk_50M),
     .clk_11M0592(clk_11M0592),
