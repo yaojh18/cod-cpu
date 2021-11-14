@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="2549800fs"></ZoomStartTime>
-      <ZoomEndTime time="3531801fs"></ZoomEndTime>
-      <Cursor1Time time="3355800fs"></Cursor1Time>
+      <ZoomStartTime time="1612379fs"></ZoomStartTime>
+      <ZoomEndTime time="2946825fs"></ZoomEndTime>
+      <Cursor1Time time="2610000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="200"></NameColumnWidth>
-      <ValueColumnWidth column_width="130"></ValueColumnWidth>
+      <ValueColumnWidth column_width="125"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="42" />
+   <WVObjectSize size="48" />
    <wvobject fp_name="/tb/clk_50M" type="logic">
       <obj_property name="ElementShortName">clk_50M</obj_property>
       <obj_property name="ObjectShortName">clk_50M</obj_property>
@@ -27,6 +27,46 @@
    <wvobject fp_name="/tb/dut/clk_10M" type="logic">
       <obj_property name="ElementShortName">clk_10M</obj_property>
       <obj_property name="ObjectShortName">clk_10M</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/reg_file/registers" type="array">
+      <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_reg_rd" type="array">
+      <obj_property name="ElementShortName">wb_reg_rd[4:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_reg_rd[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_alu_output" type="array">
+      <obj_property name="ElementShortName">wb_alu_output[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_alu_output[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_mem_data_out" type="array">
+      <obj_property name="ElementShortName">wb_mem_data_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_mem_data_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_pc" type="array">
+      <obj_property name="ElementShortName">wb_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_write_back" type="logic">
+      <obj_property name="ElementShortName">wb_write_back</obj_property>
+      <obj_property name="ObjectShortName">wb_write_back</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_wb_type" type="array">
+      <obj_property name="ElementShortName">wb_wb_type[1:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_wb_type[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/pc" type="array">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/pc_next" type="array">
+      <obj_property name="ElementShortName">pc_next[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_next[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/if_instruction" type="array">
+      <obj_property name="ElementShortName">if_instruction[31:0]</obj_property>
+      <obj_property name="ObjectShortName">if_instruction[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/id_instruction" type="array">
       <obj_property name="ElementShortName">id_instruction[31:0]</obj_property>
@@ -63,10 +103,6 @@
    <wvobject fp_name="/tb/dut/id_jump" type="logic">
       <obj_property name="ElementShortName">id_jump</obj_property>
       <obj_property name="ObjectShortName">id_jump</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/pc_next" type="array">
-      <obj_property name="ElementShortName">pc_next[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_next[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/exe_imm" type="array">
       <obj_property name="ElementShortName">exe_imm[31:0]</obj_property>
@@ -107,18 +143,6 @@
    <wvobject fp_name="/tb/dut/exe_branch_choice" type="logic">
       <obj_property name="ElementShortName">exe_branch_choice</obj_property>
       <obj_property name="ObjectShortName">exe_branch_choice</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/pc" type="array">
-      <obj_property name="ElementShortName">pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/if_instruction" type="array">
-      <obj_property name="ElementShortName">if_instruction[31:0]</obj_property>
-      <obj_property name="ObjectShortName">if_instruction[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/reg_file/registers" type="array">
-      <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/base_ram_data" type="array">
       <obj_property name="ElementShortName">base_ram_data[31:0]</obj_property>
