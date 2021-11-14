@@ -214,7 +214,7 @@ assign reg_wdata = wb_wb_type==`WB_ALU ? wb_alu_output : (wb_wb_type==`WB_MEM ? 
 /* ================== IF module =================== */
 wire branch_delay_rst;
 reg branch_delay_rst_reg;
-assign  branch_delay_rst = id_jump | (id_branch & id_branch_choice);
+assign branch_delay_rst = id_jump | (id_branch & id_branch_choice);
 assign pc_next = (exe_jump | (exe_branch & exe_branch_choice)) ? exe_alu_output : ((mem_write_mem | mem_read_mem) ? pc : pc+4);
 assign if_instruction = (mem_write_mem | mem_read_mem | pc == 0) ? 32'h13 : mem_mem_data_out;
 
@@ -278,13 +278,16 @@ RegFile reg_file(
 );
 /* ================ forward part================= */
 wire[4:0]     mem_exe_reg_rd;
-assign mem_exe_reg_rd = mem_reg_rd;
+assign mem_exe_reg_rd = exe_reg_rd;
 wire[4:0]     wb_exe_reg_rd;
-assign wb_exe_reg_rd = wb_reg_rd;
+assign wb_exe_reg_rd = mem_reg_rd;
 wire[31:0]     mem_exe_alu_output;
-assign mem_exe_alu_output = mem_alu_output;
+assign mem_exe_alu_output = exe_alu_output;
 wire[31:0]     wb_exe_alu_output;
-assign wb_exe_alu_output = wb_alu_output;
+assign wb_exe_alu_output = mem_alu_output;
+wire[1:0]     exe_id_wb_type;
+assign exe_id_wb_type = exe_wb_type;
+wire[1:0]     load_use_in_out;
 
 ID_EXE_Register id_exe_reg(
     .clk(clk_10M),
@@ -296,6 +299,7 @@ ID_EXE_Register id_exe_reg(
     .wb_exe_reg_rd(wb_exe_reg_rd),
     .mem_exe_alu_output(mem_exe_alu_output),
     .wb_exe_alu_output(wb_exe_alu_output),
+    .mem_exe_out_data(mem_mem_data_out),
     .id_imm(id_imm),
     .id_reg_rdata1(id_reg_rdata1),
     .id_reg_rdata2(id_reg_rdata2),
@@ -311,6 +315,9 @@ ID_EXE_Register id_exe_reg(
     .id_mem_byte(id_mem_byte),
     .id_write_back(id_write_back),
     .id_wb_type(id_wb_type),
+    .exe_id_wb_type(exe_id_wb_type),
+    .load_use_in(load_use_in_out),
+    .load_use_out(load_use_in_out),
     .exe_reg_rs1(exe_reg_rs1),
     .exe_reg_rs2(exe_reg_rs2),
     .exe_reg_rd(exe_reg_rd),

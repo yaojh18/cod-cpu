@@ -13,15 +13,15 @@ Disassembly of section .text:
   14:	00000013          	nop
   18:	00000013          	nop
   1c:	00000013          	nop
-  20:	00000013          	nop
-  24:	00000013          	nop
+  20:	006282b3          	add	t0,t0,t1
+  24:	00528333          	add	t1,t0,t0
   28:	00000013          	nop
-  2c:	006282b3          	add	t0,t0,t1
-  30:	00528333          	add	t1,t0,t0
-  34:	00000013          	nop
-  38:	00000013          	nop
+  2c:	0063a023          	sw	t1,0(t2) # 80001000 <__global_pointer$+0x7ffff790>
+  30:	00000013          	nop
+  34:	0003a283          	lw	t0,0(t2)
+  38:	00128513          	addi	a0,t0,1
   3c:	00000013          	nop
-  40:	0063a023          	sw	t1,0(t2) # 80001000 <__global_pointer$+0x7ffff790>
+  40:	00000013          	nop
   44:	0180006f          	j	5c <end>
   48:	006282b3          	add	t0,t0,t1
   4c:	0003a383          	lw	t2,0(t2)

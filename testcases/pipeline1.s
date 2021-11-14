@@ -9,15 +9,15 @@ _start:
     nop
     nop
     nop
-    nop
-    nop
-    nop
     add t0, t0, t1
     add t1, t0, t0
     nop
-    nop
-    nop
     sw t1, 0(t2)
+    nop
+    lw t0, 0(t2)
+    addi a0, t0, 1
+    nop
+    nop
     j end
     add t0, t0, t1
     lw t2, 0(t2)
