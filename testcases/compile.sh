@@ -1,5 +1,3 @@
-#!/bin/bash
-
 file_name=$1
 
 mkdir ./${file_name}

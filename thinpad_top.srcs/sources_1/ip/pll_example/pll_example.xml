@@ -1308,11 +1308,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-<<<<<<< HEAD
             <spirit:value>Tue Nov 09 03:58:23 UTC 2021</spirit:value>
-=======
-            <spirit:value>Fri Nov 12 18:26:51 UTC 2021</spirit:value>
->>>>>>> 285842b6a86a3ca1f11b0dee4a3825b2dd613634
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
@@ -1331,11 +1327,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-<<<<<<< HEAD
             <spirit:value>Tue Nov 09 03:58:24 UTC 2021</spirit:value>
-=======
-            <spirit:value>Fri Nov 12 18:26:52 UTC 2021</spirit:value>
->>>>>>> 285842b6a86a3ca1f11b0dee4a3825b2dd613634
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
@@ -1354,11 +1346,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-<<<<<<< HEAD
             <spirit:value>Tue Nov 09 03:58:25 UTC 2021</spirit:value>
-=======
-            <spirit:value>Fri Nov 12 18:26:52 UTC 2021</spirit:value>
->>>>>>> 285842b6a86a3ca1f11b0dee4a3825b2dd613634
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
@@ -1376,11 +1364,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-<<<<<<< HEAD
             <spirit:value>Tue Nov 09 03:58:25 UTC 2021</spirit:value>
-=======
-            <spirit:value>Fri Nov 12 18:26:52 UTC 2021</spirit:value>
->>>>>>> 285842b6a86a3ca1f11b0dee4a3825b2dd613634
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
@@ -1398,11 +1382,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-<<<<<<< HEAD
             <spirit:value>Tue Nov 09 11:07:34 UTC 2021</spirit:value>
-=======
-            <spirit:value>Fri Nov 12 18:27:44 UTC 2021</spirit:value>
->>>>>>> 285842b6a86a3ca1f11b0dee4a3825b2dd613634
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>

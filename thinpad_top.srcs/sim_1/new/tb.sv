@@ -46,7 +46,7 @@ wire uart_tbre;          //·¢ËÍÊı¾İ±êÖ¾
 wire uart_tsre;          //Êı¾İ·¢ËÍÍê±Ï±êÖ¾
 
 //WindowsĞèÒª×¢ÒâÂ·¾¶·Ö¸ô·ûµÄ×ªÒå£¬ÀıÈç"D:\\foo\\bar.bin"
-parameter BASE_RAM_INIT_FILE = "E:\\pipeline\\testcases\\branch\\code_4M.bin"; //BaseRAM³õÊ¼»¯ÎÄ¼ş£¬ÇëĞŞ¸ÄÎªÊµ¼ÊµÄ¾ø¶ÔÂ·¾¶
+parameter BASE_RAM_INIT_FILE = "E:\\pipeline\\testcases\\data_conflict\\code_4M.bin"; //BaseRAM³õÊ¼»¯ÎÄ¼ş£¬ÇëĞŞ¸ÄÎªÊµ¼ÊµÄ¾ø¶ÔÂ·¾¶
 parameter EXT_RAM_INIT_FILE = "/tmp/eram.bin";    //ExtRAM³õÊ¼»¯ÎÄ¼ş£¬ÇëĞŞ¸ÄÎªÊµ¼ÊµÄ¾ø¶ÔÂ·¾¶
 parameter FLASH_INIT_FILE = "/tmp/kernel.elf";    //Flash³õÊ¼»¯ÎÄ¼ş£¬ÇëĞŞ¸ÄÎªÊµ¼ÊµÄ¾ø¶ÔÂ·¾¶
 
@@ -71,7 +71,7 @@ initial begin
 //    cpld.pc_send_byte(8'h33);
 end
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿?
 thinpad_top dut(
     .clk_50M(clk_50M),
     .clk_11M0592(clk_11M0592),
