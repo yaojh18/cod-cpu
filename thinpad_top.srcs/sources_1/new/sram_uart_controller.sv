@@ -44,7 +44,6 @@ module SRAMUARTController(
     reg data_z;
     reg[31:0] ram_in_data;
     reg[31:0] ram_out_data;
-    integer cycle_counter;
     
     assign use_uart = (address == 32'h10000000);
     assign check_uart_state = (address == 32'h10000005);
@@ -71,7 +70,12 @@ module SRAMUARTController(
     localparam STATE_UART_READ_1 = 4'b0110;
     localparam STATE_UART_WRITE_0 = 4'b1000;
     localparam STATE_UART_WRITE_1 = 4'b1001;
+    localparam STATE_CHECK_UART_STATE_WAIT = 4'b1010;
+    
     localparam wait_cycle_num = 1;
+    localparam check_uart_state_wait_cycle_num = 2;
+    integer cycle_counter;
+    integer check_uart_state_wait_cycle_counter;
     
     reg[3:0] state;
     
@@ -87,40 +91,20 @@ module SRAMUARTController(
             data_z <= 1'b1;
             done <= 1'b0;
             cycle_counter <= 0;
+            check_uart_state_wait_cycle_counter <= 0;
             uart_can_write <= 1'b1;
         end
         else begin
             case(state)
                 STATE_IDLE: begin
                     cycle_counter <= 0;
+                    check_uart_state_wait_cycle_counter <= 0;
                     if(uart_tsre) begin
                         uart_can_write <= 1'b1;
                     end
                     else begin
                         uart_can_write <= 1'b0;
                     end
-//                    if(we==1'b1 && !check_uart_state) begin
-//                        // write
-//                        done <= 1'b0;
-//                        data_z <= 1'b0;
-//                        ram_data <= in_data;
-//                        if(use_uart && uart_can_write) state<= STATE_UART_WRITE_0;
-//                        else state <= STATE_SRAM_WRITE_0;
-//                    end
-//                    else if(oe==1'b1) begin
-//                        // read
-//                        data_z <= 1'b1;
-//                        if(check_uart_state) begin
-//                            out_data <= {24'h0, uart_state};
-//                            done <= 1'b1;
-//                        end
-//                        else begin
-//                            done <= 1'b0;
-//                            if(use_uart && uart_dataready) state<= STATE_UART_READ_0;
-//                            else state <= STATE_SRAM_READ_0;
-//                        end
-//                    end
-//                    else data_z <= 1'b1;
                     if(we==1'b1 && !check_uart_state && !done) begin
                         // write, higher priority than read
                         data_z <= 1'b0;
@@ -132,7 +116,7 @@ module SRAMUARTController(
                         data_z <= 1'b1;
                         if(check_uart_state) begin
                             ram_out_data <= {24'h0, uart_state};
-                            done <= 1'b1;
+                            state <= STATE_CHECK_UART_STATE_WAIT;
                         end
                         else if(use_uart && uart_dataready) state<= STATE_UART_READ_0;
                         else state <= STATE_SRAM_READ_0;
@@ -142,6 +126,14 @@ module SRAMUARTController(
                         data_z <= 1'b1;
                     end
                     else data_z <= 1'b1;
+                end
+                
+                STATE_CHECK_UART_STATE_WAIT: begin
+                    if(check_uart_state_wait_cycle_counter==check_uart_state_wait_cycle_num) begin
+                        state <= STATE_IDLE;
+                        done <= 1'b1;
+                    end
+                    else check_uart_state_wait_cycle_counter <= check_uart_state_wait_cycle_counter + 1;
                 end
                 
                 STATE_SRAM_READ_0: begin
