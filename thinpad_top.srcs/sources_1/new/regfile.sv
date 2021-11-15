@@ -17,7 +17,7 @@ module RegFile(
     reg[31:0] registers[0:31];
     
     // debug
-    assign out = registers[7][15:0];
+    // assign out = registers[10][15:0];
     
     always @(posedge clk or posedge rst) begin
         if(rst) begin
