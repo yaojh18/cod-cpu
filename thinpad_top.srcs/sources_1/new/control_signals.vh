@@ -8,8 +8,10 @@
 `define ALU_NOT     4'b0110
 `define ALU_SLL     4'b0111
 `define ALU_SRL     4'b1000
-`define ALU_SRA     4'b1001
-`define ALU_ROL     4'b1010
+`define ALU_LTU     4'b1001
+`define ALU_PACK    4'b1010
+`define ALU_SBSET   4'b1011
+`define ALU_CLZ     4'b1100
 
 // write back type
 `define WB_ALU      2'b00

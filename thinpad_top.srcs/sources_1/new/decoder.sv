@@ -52,18 +52,55 @@ module Decoder(
                     10'b0000000_111: alu_op = `ALU_AND;
                     10'b0000000_110: alu_op = `ALU_OR;
                     10'b0000000_100: alu_op = `ALU_XOR;
+                    10'b0000000_011: alu_op = `ALU_LTU;
+                    10'b0000100_100: alu_op = `ALU_PACK;
+                    10'b0010100_001: alu_op = `ALU_SBSET;
                 endcase
             end
             7'b0010011: begin //I-type
-                imm = {sign_ext20, inst[31:20]};
-                imm_select = 1'b1;
                 write_back = 1'b1;
                 case(inst[14:12])
-                    3'b000: alu_op = `ALU_ADD;   //ADDI
-                    3'b111: alu_op = `ALU_AND;   // ANDI
-                    3'b110: alu_op = `ALU_OR;    // ORI
-                    3'b001: alu_op = `ALU_SLL;  // SLLI
-                    3'b101: alu_op = `ALU_SRL;  // SRLI
+                    3'b000: begin
+                        imm = {sign_ext20, inst[31:20]};
+                        imm_select = 1'b1;
+                        alu_op = `ALU_ADD;   //ADDI
+                    end
+                    3'b111: begin
+                        imm = {sign_ext20, inst[31:20]};
+                        imm_select = 1'b1;
+                        alu_op = `ALU_AND;   // ANDI
+                    end
+                    3'b110: begin
+                        imm = {sign_ext20, inst[31:20]};
+                        imm_select = 1'b1;
+                        alu_op = `ALU_OR;    // ORI
+                    end
+                    3'b001: begin
+                        case (inst[31:25])
+                            7'b0000000: begin
+                                imm = {27'b0, inst[24:20]};
+                                imm_select = 1'b1;
+                                alu_op = `ALU_SLL;  // SLLI
+                            end
+                            7'b0110000: begin
+                                if (inst[24:20] == 5'b00000) begin
+                                    imm = 32'b0;
+                                    imm_select = 1'b1;
+                                    alu_op = `ALU_CLZ;  // CLZ
+                                end
+                                else alu_op = `ALU_ZERO;  // ERROR
+                            end
+                            default: alu_op = `ALU_ZERO;  // ERROR
+                        endcase
+                    end
+                    3'b101: begin
+                        if (inst[31:25] == 7'b0) begin
+                            imm = {sign_ext20, inst[31:20]};
+                            imm_select = 1'b1;
+                            alu_op = `ALU_SRL;  // SRLI
+                        end
+                        else alu_op = `ALU_ZERO;  // ERROR
+                    end
                 endcase
             end
             7'b0000011: begin //Load
