@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1211320fs"></ZoomStartTime>
-      <ZoomEndTime time="1740321fs"></ZoomEndTime>
-      <Cursor1Time time="10818166fs"></Cursor1Time>
+      <ZoomStartTime time="1966666fs"></ZoomStartTime>
+      <ZoomEndTime time="6021667fs"></ZoomEndTime>
+      <Cursor1Time time="4251666fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="200"></NameColumnWidth>
-      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="28" />
+   <WVObjectSize size="29" />
    <wvobject fp_name="/tb/clk_50M" type="logic">
       <obj_property name="ElementShortName">clk_50M</obj_property>
       <obj_property name="ObjectShortName">clk_50M</obj_property>
@@ -28,13 +28,17 @@
       <obj_property name="ElementShortName">clk_10M</obj_property>
       <obj_property name="ObjectShortName">clk_10M</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/reg_file/registers" type="array">
-      <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
+   <wvobject fp_name="/tb/dut/pc" type="array">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/alu/op" type="array">
       <obj_property name="ElementShortName">op[3:0]</obj_property>
       <obj_property name="ObjectShortName">op[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/reg_file/registers" type="array">
+      <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/alu/a" type="array">
       <obj_property name="ElementShortName">a[31:0]</obj_property>
@@ -44,9 +48,9 @@
       <obj_property name="ElementShortName">b[31:0]</obj_property>
       <obj_property name="ObjectShortName">b[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/r" type="array">
-      <obj_property name="ElementShortName">r[31:0]</obj_property>
-      <obj_property name="ObjectShortName">r[31:0]</obj_property>
+   <wvobject fp_name="/tb/dut/alu/result" type="array">
+      <obj_property name="ElementShortName">result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">result[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/alu/a16" type="array">
       <obj_property name="ElementShortName">a16[15:0]</obj_property>

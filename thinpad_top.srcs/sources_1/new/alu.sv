@@ -15,7 +15,6 @@ module ALU(
     reg[15:0] a16;
     reg[7:0] a8;
     reg[3:0] a4;
-    reg[1:0] a2;
     
     assign flags = {zf,cf,sf,vf};
     assign r = result;
@@ -95,16 +94,15 @@ module ALU(
                     a4 = a8[3:0];
                     result = result + 4;
                 end
-                if (a4 & 4'h7)
-                    a2 = a4[3:2];
-                else begin
-                    a2 = a4[1:0];
-                    result = result + 2;
-                end
-                case (a2)
-                    2'b11: result = result + 2;
-                    2'b10: result = result + 2;
-                    2'b01: result = result + 1;
+                case (a4)
+                    4'b0000: result = result + 4;
+                    4'b0001: result = result + 3;
+                    4'b0010: result = result + 2;
+                    4'b0011: result = result + 2;
+                    4'b0100: result = result + 1;
+                    4'b0101: result = result + 1;
+                    4'b0110: result = result + 1;
+                    4'b0111: result = result + 1;
                 endcase
             end
             default:
