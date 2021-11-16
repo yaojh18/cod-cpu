@@ -115,7 +115,7 @@ module SRAMUARTController(
                     else if(oe==1'b1 && !done) begin
                         data_z <= 1'b1;
                         if(check_uart_state) begin
-                            ram_out_data <= {24'h0, uart_state};
+                            ram_out_data <= {16'h0, uart_state, 8'h0};
                             state <= STATE_CHECK_UART_STATE_WAIT;
                         end
                         else if(use_uart && uart_dataready) state<= STATE_UART_READ_0;
