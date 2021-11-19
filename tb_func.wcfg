@@ -11,62 +11,98 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1966666fs"></ZoomStartTime>
-      <ZoomEndTime time="6021667fs"></ZoomEndTime>
-      <Cursor1Time time="4251666fs"></Cursor1Time>
+      <ZoomStartTime time="640420fs"></ZoomStartTime>
+      <ZoomEndTime time="3360421fs"></ZoomEndTime>
+      <Cursor1Time time="2060420fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="200"></NameColumnWidth>
-      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+      <ValueColumnWidth column_width="77"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="29" />
+   <WVObjectSize size="38" />
    <wvobject fp_name="/tb/clk_50M" type="logic">
       <obj_property name="ElementShortName">clk_50M</obj_property>
       <obj_property name="ObjectShortName">clk_50M</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/clk_10M" type="logic">
-      <obj_property name="ElementShortName">clk_10M</obj_property>
-      <obj_property name="ObjectShortName">clk_10M</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/pc" type="array">
       <obj_property name="ElementShortName">pc[31:0]</obj_property>
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/op" type="array">
-      <obj_property name="ElementShortName">op[3:0]</obj_property>
-      <obj_property name="ObjectShortName">op[3:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/tb/dut/reg_file/registers" type="array">
       <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
       <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/a" type="array">
-      <obj_property name="ElementShortName">a[31:0]</obj_property>
-      <obj_property name="ObjectShortName">a[31:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_instruction" type="array">
+      <obj_property name="ElementShortName">id_instruction[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_instruction[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/b" type="array">
-      <obj_property name="ElementShortName">b[31:0]</obj_property>
-      <obj_property name="ObjectShortName">b[31:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_pc" type="array">
+      <obj_property name="ElementShortName">id_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_pc[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/result" type="array">
-      <obj_property name="ElementShortName">result[31:0]</obj_property>
-      <obj_property name="ObjectShortName">result[31:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_exe_reg/mem_exe_reg_rd" type="array">
+      <obj_property name="ElementShortName">mem_exe_reg_rd[11:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_exe_reg_rd[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/a16" type="array">
-      <obj_property name="ElementShortName">a16[15:0]</obj_property>
-      <obj_property name="ObjectShortName">a16[15:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_exe_reg/wb_exe_reg_rd" type="array">
+      <obj_property name="ElementShortName">wb_exe_reg_rd[11:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_exe_reg_rd[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/a8" type="array">
-      <obj_property name="ElementShortName">a8[7:0]</obj_property>
-      <obj_property name="ObjectShortName">a8[7:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_exe_reg/mem_exe_reg_data" type="array">
+      <obj_property name="ElementShortName">mem_exe_reg_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_exe_reg_data[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/a4" type="array">
-      <obj_property name="ElementShortName">a4[3:0]</obj_property>
-      <obj_property name="ObjectShortName">a4[3:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rs1" type="array">
+      <obj_property name="ElementShortName">id_reg_rs1[11:0]</obj_property>
+      <obj_property name="ObjectShortName">id_reg_rs1[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb/dut/alu/a2" type="array">
-      <obj_property name="ElementShortName">a2[1:0]</obj_property>
-      <obj_property name="ObjectShortName">a2[1:0]</obj_property>
+   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rs2" type="array">
+      <obj_property name="ElementShortName">id_reg_rs2[11:0]</obj_property>
+      <obj_property name="ObjectShortName">id_reg_rs2[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rdata1" type="array">
+      <obj_property name="ElementShortName">id_reg_rdata1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_reg_rdata1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rdata2" type="array">
+      <obj_property name="ElementShortName">id_reg_rdata2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_reg_rdata2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/id_exe_reg/wb_exe_reg_data" type="array">
+      <obj_property name="ElementShortName">wb_exe_reg_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_exe_reg_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/exe_pc" type="array">
+      <obj_property name="ElementShortName">exe_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/exe_reg_rdata1" type="array">
+      <obj_property name="ElementShortName">exe_reg_rdata1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_reg_rdata1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/exe_reg_rdata2" type="array">
+      <obj_property name="ElementShortName">exe_reg_rdata2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_reg_rdata2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/exe_reg_rd" type="array">
+      <obj_property name="ElementShortName">exe_reg_rd[11:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_reg_rd[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/exe_imm" type="array">
+      <obj_property name="ElementShortName">exe_imm[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_imm[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/exe_imm_select" type="logic">
+      <obj_property name="ElementShortName">exe_imm_select</obj_property>
+      <obj_property name="ObjectShortName">exe_imm_select</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/mem_pc" type="array">
+      <obj_property name="ElementShortName">mem_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/mem_alu_output" type="array">
+      <obj_property name="ElementShortName">mem_alu_output[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_alu_output[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/base_ram_data" type="array">
       <obj_property name="ElementShortName">base_ram_data[31:0]</obj_property>

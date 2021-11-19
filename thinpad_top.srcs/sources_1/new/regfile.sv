@@ -54,15 +54,15 @@ module RegFile(
             registers[29] <= 32'b0;
             registers[30] <= 32'b0;
             registers[31] <= 32'b0;
-            mtvec <= 32'b0;
-            mscratch <= 32'b0;
-            mepc <= 32'b0;
-            mcause <= 32'b0;
-            mstatus <= 32'b0;
-            mie <= 32'b0;
-            mip <= 32'b0;
-            mtime <= 32'b0;
-            mtimecmp <= 32'b0;
+            mtvec         <= 32'b0;
+            mscratch      <= 32'b0;
+            mepc          <= 32'b0;
+            mcause        <= 32'b0;
+            mstatus       <= 32'b0;
+            mie           <= 32'b0;
+            mip           <= 32'b0;
+            mtime         <= 32'b0;
+            mtimecmp      <= 32'b0;
         end
         else if (we)
             registers[waddr[4:0]] <= wdata;
