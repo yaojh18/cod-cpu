@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="640420fs"></ZoomStartTime>
-      <ZoomEndTime time="3360421fs"></ZoomEndTime>
-      <Cursor1Time time="2060420fs"></Cursor1Time>
+      <ZoomStartTime time="1345000fs"></ZoomStartTime>
+      <ZoomEndTime time="3880001fs"></ZoomEndTime>
+      <Cursor1Time time="2630000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="200"></NameColumnWidth>
-      <ValueColumnWidth column_width="77"></ValueColumnWidth>
+      <ValueColumnWidth column_width="113"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="38" />
+   <WVObjectSize size="34" />
    <wvobject fp_name="/tb/clk_50M" type="logic">
       <obj_property name="ElementShortName">clk_50M</obj_property>
       <obj_property name="ObjectShortName">clk_50M</obj_property>
@@ -31,6 +31,7 @@
    <wvobject fp_name="/tb/dut/reg_file/registers" type="array">
       <obj_property name="ElementShortName">registers[0:31][31:0]</obj_property>
       <obj_property name="ObjectShortName">registers[0:31][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/id_instruction" type="array">
       <obj_property name="ElementShortName">id_instruction[31:0]</obj_property>
@@ -39,38 +40,6 @@
    <wvobject fp_name="/tb/dut/id_pc" type="array">
       <obj_property name="ElementShortName">id_pc[31:0]</obj_property>
       <obj_property name="ObjectShortName">id_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/mem_exe_reg_rd" type="array">
-      <obj_property name="ElementShortName">mem_exe_reg_rd[11:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_exe_reg_rd[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/wb_exe_reg_rd" type="array">
-      <obj_property name="ElementShortName">wb_exe_reg_rd[11:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_exe_reg_rd[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/mem_exe_reg_data" type="array">
-      <obj_property name="ElementShortName">mem_exe_reg_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_exe_reg_data[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rs1" type="array">
-      <obj_property name="ElementShortName">id_reg_rs1[11:0]</obj_property>
-      <obj_property name="ObjectShortName">id_reg_rs1[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rs2" type="array">
-      <obj_property name="ElementShortName">id_reg_rs2[11:0]</obj_property>
-      <obj_property name="ObjectShortName">id_reg_rs2[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rdata1" type="array">
-      <obj_property name="ElementShortName">id_reg_rdata1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">id_reg_rdata1[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/id_reg_rdata2" type="array">
-      <obj_property name="ElementShortName">id_reg_rdata2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">id_reg_rdata2[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb/dut/id_exe_reg/wb_exe_reg_data" type="array">
-      <obj_property name="ElementShortName">wb_exe_reg_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_exe_reg_data[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/exe_pc" type="array">
       <obj_property name="ElementShortName">exe_pc[31:0]</obj_property>
@@ -95,6 +64,22 @@
    <wvobject fp_name="/tb/dut/exe_imm_select" type="logic">
       <obj_property name="ElementShortName">exe_imm_select</obj_property>
       <obj_property name="ObjectShortName">exe_imm_select</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/wb_reg_rd" type="array">
+      <obj_property name="ElementShortName">wb_reg_rd[11:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_reg_rd[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/reg_file/we1" type="logic">
+      <obj_property name="ElementShortName">we1</obj_property>
+      <obj_property name="ObjectShortName">we1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/reg_file/waddr1" type="array">
+      <obj_property name="ElementShortName">waddr1[11:0]</obj_property>
+      <obj_property name="ObjectShortName">waddr1[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb/dut/reg_file/wdata1" type="array">
+      <obj_property name="ElementShortName">wdata1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wdata1[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb/dut/mem_pc" type="array">
       <obj_property name="ElementShortName">mem_pc[31:0]</obj_property>

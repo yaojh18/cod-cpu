@@ -193,7 +193,7 @@ assign mem_address = (mem_read_mem | mem_write_mem) ? mem_alu_output : pc;
 /* =========== MEM/WB register ============ */
 wire          reset_mem_wb;
 assign reset_mem_wb = reset_of_clk10M;
-wire[4:0]     wb_reg_rd;
+wire[11:0]     wb_reg_rd;
 wire[31:0]    wb_alu_output;
 wire[31:0]    wb_mem_data_out;
 wire[31:0]    wb_pc;
@@ -259,9 +259,15 @@ Decoder decoder(
 RegFile reg_file(
     .clk(clk_10M),
     .rst(reset_of_clk10M),
-    .we(wb_write_back),
-    .waddr(wb_reg_rd),
-    .wdata(reg_wdata),
+    .we1(wb_write_back),
+    .waddr1(wb_reg_rd),
+    .wdata1(reg_wdata),
+    .we2(0),
+    .waddr2(0),
+    .wdata2(0),
+    .we3(0),
+    .waddr3(0),
+    .wdata3(0),
     .raddr1(id_reg_rs1),
     .raddr2(id_reg_rs2),
     .rdata1(id_reg_rdata1),
