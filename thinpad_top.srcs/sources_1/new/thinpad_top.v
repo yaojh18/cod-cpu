@@ -115,9 +115,9 @@ wire[31:0] id_instruction;
 wire[31:0] id_pc;
 
 /* =========== Decoder =========== */
-wire[4:0]        id_reg_rs1;
-wire[4:0]        id_reg_rs2;
-wire[4:0]        id_reg_rd;
+wire[11:0]       id_reg_rs1;
+wire[11:0]       id_reg_rs2;
+wire[11:0]       id_reg_rd;
 wire[31:0]       id_reg_rdata1;
 wire[31:0]       id_reg_rdata2;
 wire[31:0]       id_imm;
@@ -136,9 +136,7 @@ wire[1:0]        id_wb_type;
 /* =========== ID/EXE register ========== */
 wire          reset_id_exe;
 assign reset_id_exe = reset_of_clk10M;
-wire[4:0]     exe_reg_rs1;
-wire[4:0]     exe_reg_rs2;
-wire[4:0]     exe_reg_rd;
+wire[11:0]    exe_reg_rd;
 wire[31:0]    exe_imm;
 wire[31:0]    exe_reg_rdata1;
 wire[31:0]    exe_reg_rdata2;
@@ -170,7 +168,7 @@ wire          reset_exe_mem;
 assign reset_exe_mem = reset_of_clk10M ;
 wire[31:0]    exe_mem_data_in;
 assign exe_mem_data_in = exe_reg_rdata2;
-wire[4:0]     mem_reg_rd;
+wire[11:0]    mem_reg_rd;
 wire[31:0]    mem_alu_output;
 wire[31:0]    mem_mem_data_in;
 wire[31:0]    mem_pc;
@@ -267,8 +265,7 @@ RegFile reg_file(
     .raddr1(id_reg_rs1),
     .raddr2(id_reg_rs2),
     .rdata1(id_reg_rdata1),
-    .rdata2(id_reg_rdata2),
-    .out(leds)
+    .rdata2(id_reg_rdata2)
 );
 /* ================ forward part================= */
 
@@ -276,12 +273,10 @@ ID_EXE_Register id_exe_reg(
     .clk(clk_10M),
     .rst(reset_id_exe),
     .delay_rst(branch_delay_rst | load_delay),
-    .mem_exe_reg_rd(exe_reg_rd),
-    .wb_exe_reg_rd(mem_reg_rd),
+    .mem_exe_reg_rd(exe_reg_rd & exe_write_back),
+    .wb_exe_reg_rd(mem_reg_rd & mem_write_back),
     .mem_exe_reg_data(exe_alu_output),
     .wb_exe_reg_data(wb_exe_reg_data),
-    .id_reg_rs1(id_reg_rs1),
-    .id_reg_rs2(id_reg_rs2),
     .id_reg_rd(id_reg_rd),
     .id_imm(id_imm),
     .id_reg_rdata1(id_reg_rdata1),
@@ -298,8 +293,6 @@ ID_EXE_Register id_exe_reg(
     .id_mem_byte(id_mem_byte),
     .id_write_back(id_write_back),
     .id_wb_type(id_wb_type),
-    .exe_reg_rs1(exe_reg_rs1),
-    .exe_reg_rs2(exe_reg_rs2),
     .exe_reg_rd(exe_reg_rd),
     .exe_imm(exe_imm),
     .exe_reg_rdata1(exe_reg_rdata1),

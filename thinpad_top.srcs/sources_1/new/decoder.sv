@@ -4,9 +4,9 @@
 
 module Decoder(
     input wire[31:0]        inst,           // instruction
-    output reg[4:0]         reg_rs1,
-    output wire[4:0]        reg_rs2,
-    output wire[4:0]        reg_rd,
+    output reg[11:0]        reg_rs1,
+    output wire[11:0]       reg_rs2,
+    output wire[11:0]       reg_rd,
     output reg[31:0]        imm,
     output reg[3:0]         alu_op,
     output reg              pc_select,      // 1:select pc as alu_input1, 0:select reg data

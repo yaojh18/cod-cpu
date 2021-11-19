@@ -85,5 +85,15 @@ tret:
     or t0, t0, s1
     sw t0, 0(s0) # *s0 = t0
     sw gp, 0xc(s0) # *(s0+0xc) = gp
+    lui t0, 0x80100
+    lw t1, 0(t0)
+    lw t1, 4(t0)
+    lw t1, 8(t0)
+    lw t1, 12(t0)
+    lw t1, 16(t0)
+    lw t1, 20(t0)
+    lw t1, 24(t0)
+
+
 end:
     j  end

@@ -6,14 +6,14 @@ module ID_EXE_Register(
         input wire          rst,
         input wire          delay_rst,
         
-        input wire[4:0]     mem_exe_reg_rd,
-        input wire[4:0]     wb_exe_reg_rd,
+        input wire[11:0]    mem_exe_reg_rd,
+        input wire[11:0]    wb_exe_reg_rd,
         input wire[31:0]    mem_exe_reg_data,
         input wire[31:0]    wb_exe_reg_data,
         
-        input wire[4:0]     id_reg_rs1,
-        input wire[4:0]     id_reg_rs2,
-        input wire[4:0]     id_reg_rd,
+        input wire[11:0]    id_reg_rs1,
+        input wire[11:0]    id_reg_rs2,
+        input wire[11:0]    id_reg_rd,
         input wire[31:0]    id_imm,
         input wire[31:0]    id_reg_rdata1,
         input wire[31:0]    id_reg_rdata2,
@@ -30,9 +30,7 @@ module ID_EXE_Register(
         input wire          id_write_back,
         input wire[1:0]     id_wb_type,
                
-        output reg[4:0]     exe_reg_rs1,
-        output reg[4:0]     exe_reg_rs2,
-        output reg[4:0]     exe_reg_rd,
+        output reg[11:0]    exe_reg_rd,
         output reg[31:0]    exe_imm,
         output reg[31:0]    exe_reg_rdata1,
         output reg[31:0]    exe_reg_rdata2,
@@ -56,8 +54,6 @@ module ID_EXE_Register(
     
     always @(posedge clk or posedge rst) begin
         if(rst | delay_rst) begin
-            exe_reg_rs1 <= 5'b00000;
-            exe_reg_rs2 <= 5'b00000;
             exe_reg_rd <= 5'b00000;
             exe_imm <= 32'h00000000;
             exe_reg_rdata1 <= 32'h00000000;
@@ -88,8 +84,6 @@ module ID_EXE_Register(
                 exe_reg_rdata2 <= wb_exe_reg_data;
             else
                 exe_reg_rdata2 <= id_reg_rdata2;
-            exe_reg_rs1 <= id_reg_rs1;
-            exe_reg_rs2 <= id_reg_rs2;
             exe_reg_rd <= id_reg_rd;
             exe_imm <= id_imm;
             exe_pc <= id_pc;
