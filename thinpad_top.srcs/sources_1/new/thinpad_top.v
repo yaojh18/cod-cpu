@@ -450,8 +450,8 @@ EXE_MEM_Register exe_mem_reg(
     .mem_wb_type1(mem_wb_type1),
     .mem_write_back2(mem_write_back2),
     .mem_wb_type2(mem_wb_type2),
-    .mem_write_back3(mem_write_back2),
-    .mem_wb_type3(mem_wb_type2)
+    .mem_write_back3(mem_write_back3),
+    .mem_wb_type3(mem_wb_type3)
 );
 
 SRAMUARTController sram_uart_controller(
