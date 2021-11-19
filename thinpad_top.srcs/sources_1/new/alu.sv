@@ -68,6 +68,12 @@ module ALU(
             `ALU_LTU : begin
                 result = a < b;
             end 
+            `ALU_NOT_AND: begin
+                result = a & (~b);
+            end
+            `ALU_STATUS: begin
+                result = {19'b0, a[1:0], 9'b0, b[1:0]};
+            end
             `ALU_PACK : begin
                 result = {b[15:0], a[15:0]};
             end 

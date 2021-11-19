@@ -123,9 +123,11 @@ wire[11:0]       id_reg_rd3;
 wire[31:0]       id_reg_rdata1;
 wire[31:0]       id_reg_rdata2;
 wire[31:0]       id_imm;
+wire[31:0]       id_imm_temp;
 wire[3:0]        id_alu_op;
 wire             id_pc_select;
 wire             id_imm_select;
+wire             id_pc_jump;
 wire             id_branch;
 wire             id_branch_comp;
 wire             id_jump;
@@ -146,12 +148,14 @@ wire[11:0]    exe_reg_rd1;
 wire[11:0]    exe_reg_rd2;
 wire[11:0]    exe_reg_rd3;
 wire[31:0]    exe_imm;
+wire[31:0]    exe_imm_temp;
 wire[31:0]    exe_reg_rdata1;
 wire[31:0]    exe_reg_rdata2;
 wire[31:0]    exe_pc;
 wire[3:0]     exe_alu_op;
 wire          exe_pc_select;
 wire          exe_imm_select;
+wire          exe_pc_jump;
 wire          exe_branch;
 wire          exe_branch_comp;
 wire          exe_branch_choice;
@@ -186,6 +190,7 @@ wire[11:0]    mem_reg_rd2;
 wire[11:0]    mem_reg_rd3;
 wire[31:0]    mem_reg_rdata1;
 wire[31:0]    mem_reg_rdata2;
+wire[31:0]    mem_imm_temp;
 wire[31:0]    mem_alu_output;
 wire[31:0]    mem_mem_data_in;
 wire[31:0]    mem_pc;
@@ -219,6 +224,7 @@ wire[11:0]    wb_reg_rd2;
 wire[11:0]    wb_reg_rd3;
 wire[31:0]    wb_reg_rdata1;
 wire[31:0]    wb_reg_rdata2;
+wire[31:0]    wb_imm_temp;
 wire[31:0]    wb_alu_output;
 wire[31:0]    wb_mem_data_out;
 wire[31:0]    wb_pc;
@@ -233,30 +239,30 @@ wire[2:0]     wb_wb_type3;
 reg[31:0]    reg_wdata1;
 reg[31:0]    reg_wdata2;
 reg[31:0]    reg_wdata3;
-always @(*) begin
+always @(*) begin                             // there are some duplications
     case (wb_wb_type1)
         `WB_ALU: reg_wdata1 = wb_alu_output;
         `WB_MEM: reg_wdata1 = wb_mem_data_out;
-        `WB_PC_PLUS:  reg_wdata1 = wb_pc+4;
-        `WB_PC: reg_wdata1 = wb_pc;
+        `WB_PC: reg_wdata1 = wb_pc + 4;
         `WB_REG1: reg_wdata1 = wb_reg_rdata1;
         `WB_REG2: reg_wdata1 = wb_reg_rdata2;
+        `WB_TEMP: reg_wdata1 = wb_imm_temp;
     endcase
     case (wb_wb_type2)
         `WB_ALU: reg_wdata2 = wb_alu_output;
         `WB_MEM: reg_wdata2 = wb_mem_data_out;
-        `WB_PC_PLUS:  reg_wdata2 = wb_pc+4;
-        `WB_PC: reg_wdata2 = wb_pc;
+        `WB_PC: reg_wdata2 = wb_pc + 4;
         `WB_REG1: reg_wdata2 = wb_reg_rdata1;
         `WB_REG2: reg_wdata2 = wb_reg_rdata2;
+        `WB_TEMP: reg_wdata2 = wb_imm_temp;
     endcase
     case (wb_wb_type3)
         `WB_ALU: reg_wdata3 = wb_alu_output;
         `WB_MEM: reg_wdata3 = wb_mem_data_out;
-        `WB_PC_PLUS:  reg_wdata3 = wb_pc+4;
-        `WB_PC: reg_wdata3 = wb_pc;
+        `WB_PC: reg_wdata3 = wb_pc + 4;
         `WB_REG1: reg_wdata3 = wb_reg_rdata1;
         `WB_REG2: reg_wdata3 = wb_reg_rdata2;
+        `WB_TEMP: reg_wdata3 = wb_imm_temp;
     endcase
 end
  
@@ -272,7 +278,7 @@ wire[31:0] wb_exe_reg_data;
 assign wb_exe_reg_data = mem_wb_type1==`WB_ALU ? mem_alu_output : (mem_wb_type1==`WB_MEM ? mem_mem_data_out : mem_pc+4);
 
 /* ================== IF module =================== */
-assign pc_next = branch_delay_rst ? exe_alu_output : ((mem_write_mem | mem_read_mem | load_delay) ? pc : pc+4);
+assign pc_next = exe_pc_jump? exe_reg_rdata2 : (branch_delay_rst ? exe_alu_output : ((mem_write_mem | mem_read_mem | load_delay) ? pc : pc+4));
 assign if_instruction = (mem_write_mem | mem_read_mem) ? 32'h13 : mem_mem_data_out;
 
 always @(posedge clk_10M or posedge reset_of_clk10M) begin
@@ -301,9 +307,11 @@ Decoder decoder(
     .reg_rd2(id_reg_rd2),
     .reg_rd3(id_reg_rd3),
     .imm(id_imm),
+    .imm_temp(id_imm_temp),
     .alu_op(id_alu_op),
     .pc_select(id_pc_select),
     .imm_select(id_imm_select),
+    .pc_jump(id_pc_jump),
     .branch(id_branch),
     .branch_comp(id_branch_comp),
     .jump(id_jump),
@@ -351,12 +359,14 @@ ID_EXE_Register id_exe_reg(
     .id_reg_rs1(id_reg_rs1),
     .id_reg_rs2(id_reg_rs2),
     .id_imm(id_imm),
+    .id_imm_temp(id_imm_temp),
     .id_reg_rdata1(id_reg_rdata1),
     .id_reg_rdata2(id_reg_rdata2),
     .id_pc(id_pc),
     .id_alu_op(id_alu_op),
     .id_pc_select(id_pc_select),
     .id_imm_select(id_imm_select),
+    .id_pc_jump(id_pc_jump),
     .id_branch(id_branch),
     .id_branch_comp(id_branch_comp),
     .id_jump(id_jump),
@@ -373,12 +383,14 @@ ID_EXE_Register id_exe_reg(
     .exe_reg_rd2(exe_reg_rd2),
     .exe_reg_rd3(exe_reg_rd3),
     .exe_imm(exe_imm),
+    .exe_imm_temp(exe_imm_temp),
     .exe_reg_rdata1(exe_reg_rdata1),
     .exe_reg_rdata2(exe_reg_rdata2),
     .exe_pc(exe_pc),
     .exe_alu_op(exe_alu_op),
     .exe_pc_select(exe_pc_select),
     .exe_imm_select(exe_imm_select),
+    .exe_pc_jump(exe_pc_jump),
     .exe_branch(exe_branch),
     .exe_branch_comp(exe_branch_comp),
     .exe_jump(exe_jump),
@@ -409,6 +421,7 @@ EXE_MEM_Register exe_mem_reg(
     .exe_reg_rd3(exe_reg_rd3),
     .exe_reg_rdata1(exe_reg_rdata1),
     .exe_reg_rdata2(exe_reg_rdata2),
+    .exe_imm_temp(exe_imm_temp),
     .exe_alu_output(exe_alu_output),
     .exe_mem_data_in(exe_mem_data_in),
     .exe_pc(exe_pc),
@@ -426,6 +439,7 @@ EXE_MEM_Register exe_mem_reg(
     .mem_reg_rd3(mem_reg_rd3),
     .mem_reg_rdata1(mem_reg_rdata1),
     .mem_reg_rdata2(mem_reg_rdata2),
+    .mem_imm_temp(mem_imm_temp),
     .mem_alu_output(mem_alu_output),
     .mem_mem_data_in(mem_mem_data_in),
     .mem_pc(mem_pc),
@@ -482,6 +496,7 @@ MEM_WB_Register mem_wb_reg(
     .mem_reg_rd3(mem_reg_rd3),
     .mem_reg_rdata1(mem_reg_rdata1),
     .mem_reg_rdata2(mem_reg_rdata2),
+    .mem_imm_temp(mem_imm_temp),
     .mem_alu_output(mem_alu_output),
     .mem_mem_data_out(mem_mem_data_out),
     .mem_pc(mem_pc),
@@ -496,6 +511,7 @@ MEM_WB_Register mem_wb_reg(
     .wb_reg_rd3(wb_reg_rd3),
     .wb_reg_rdata1(wb_reg_rdata1),
     .wb_reg_rdata2(wb_reg_rdata2),
+    .wb_imm_temp(wb_imm_temp),
     .wb_alu_output(wb_alu_output),
     .wb_mem_data_out(wb_mem_data_out),
     .wb_pc(wb_pc),

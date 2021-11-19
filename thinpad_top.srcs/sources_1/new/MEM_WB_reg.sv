@@ -9,6 +9,7 @@ module MEM_WB_Register(
         input wire[11:0]    mem_reg_rd3,
         input wire[31:0]    mem_reg_rdata1,
         input wire[31:0]    mem_reg_rdata2,
+        input wire[31:0]    mem_imm_temp,
         input wire[31:0]    mem_alu_output,
         input wire[31:0]    mem_mem_data_out,
         input wire[31:0]    mem_pc,
@@ -24,6 +25,7 @@ module MEM_WB_Register(
         output reg[11:0]    wb_reg_rd3,
         output reg[31:0]    wb_reg_rdata1,
         output reg[31:0]    wb_reg_rdata2,
+        output reg[31:0]    wb_imm_temp,
         output reg[31:0]    wb_alu_output,
         output reg[31:0]    wb_mem_data_out,
         output reg[31:0]    wb_pc,
@@ -42,6 +44,7 @@ module MEM_WB_Register(
             wb_reg_rd3 <= 12'b0;
             wb_reg_rdata1 <= 32'b0;
             wb_reg_rdata2 <= 32'b0;
+            wb_imm_temp <= 32'b0;
             wb_alu_output <= 32'b0;
             wb_mem_data_out <= 32'b0;
             wb_pc <= 32'b0;
@@ -58,6 +61,7 @@ module MEM_WB_Register(
             wb_reg_rd3 <= mem_reg_rd3;
             wb_reg_rdata1 <= mem_reg_rdata1;
             wb_reg_rdata2 <= mem_reg_rdata2;
+            wb_imm_temp <= mem_imm_temp; 
             wb_alu_output <= mem_alu_output;
             wb_mem_data_out <= mem_mem_data_out;
             wb_pc <= mem_pc;

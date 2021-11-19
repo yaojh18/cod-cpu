@@ -9,6 +9,7 @@ module EXE_MEM_Register(
         input wire[11:0]    exe_reg_rd3,
         input wire[31:0]    exe_reg_rdata1,
         input wire[31:0]    exe_reg_rdata2,
+        input wire[31:0]    exe_imm_temp,
         input wire[31:0]    exe_alu_output,
         input wire[31:0]    exe_mem_data_in,
         input wire[31:0]    exe_pc,
@@ -27,6 +28,7 @@ module EXE_MEM_Register(
         output reg[11:0]    mem_reg_rd3,
         output reg[31:0]    mem_reg_rdata1,
         output reg[31:0]    mem_reg_rdata2,
+        output reg[31:0]    mem_imm_temp,
         output reg[31:0]    mem_alu_output,
         output reg[31:0]    mem_mem_data_in,
         output reg[31:0]    mem_pc,
@@ -48,6 +50,7 @@ module EXE_MEM_Register(
             mem_reg_rd3 <= 12'b0;
             mem_reg_rdata1 <= 32'b0;
             mem_reg_rdata2 <= 32'b0;
+            mem_imm_temp <= 32'b0;
             mem_alu_output <= 32'b0;
             mem_mem_data_in <= 32'b0;
             mem_pc <= 32'b0;
@@ -67,6 +70,7 @@ module EXE_MEM_Register(
             mem_reg_rd3 <= exe_reg_rd3;
             mem_reg_rdata1 <= exe_reg_rdata1;
             mem_reg_rdata2 <= exe_reg_rdata2;
+            mem_imm_temp <= exe_imm_temp;
             mem_alu_output <= exe_alu_output;
             mem_mem_data_in <= exe_mem_data_in;
             mem_pc <= exe_pc;

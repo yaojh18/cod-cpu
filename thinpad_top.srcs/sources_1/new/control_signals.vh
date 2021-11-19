@@ -12,14 +12,16 @@
 `define ALU_PACK    4'b1010
 `define ALU_SBSET   4'b1011
 `define ALU_CLZ     4'b1100
+`define ALU_NOT_AND 4'b1101
+`define ALU_STATUS  4'b1110
 
 // write back type
 `define WB_ALU      3'b000
 `define WB_MEM      3'b001
-`define WB_PC_PLUS  3'b010
 `define WB_PC       3'b011
 `define WB_REG1     3'b100
 `define WB_REG2     3'b101
+`define WB_TEMP     3'b110
 
 // branch compare type
 `define BEQ         1'b0

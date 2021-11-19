@@ -10,9 +10,11 @@ module Decoder(
     output reg[11:0]        reg_rd2,
     output reg[11:0]        reg_rd3,
     output reg[31:0]        imm,
+    output reg[31:0]        imm_temp,
     output reg[3:0]         alu_op,
     output reg              pc_select,      // 1:select pc as alu_input1, 0:select reg data
     output reg              imm_select,     // 1:select imm as alu_input2, 0:select reg data
+    output reg              pc_jump,
     output reg              branch,         // conditioned branching, 1:pc=branch addr, 0:pc=pc+4
     output reg              branch_comp,    // branch compare type
     output reg              jump,           // unconditioned branching
@@ -40,10 +42,12 @@ module Decoder(
         reg_rd1 = {7'b0, inst[11:7]};
         reg_rd2 = 12'b0;
         reg_rd3 = 12'b0;
-        imm = 32'h0;
+        imm = 32'b0;
+        imm_temp = 32'b0;
         alu_op = `ALU_ZERO;
         pc_select = 1'b0;
         imm_select = 1'b0;
+        pc_jump = 1'b0;
         branch = 1'b0;
         branch_comp = `BEQ;
         jump = 1'b0;
@@ -157,7 +161,7 @@ module Decoder(
                 imm_select = 1'b1;
                 jump = 1'b1;
                 write_back1 = 1'b1;
-                wb_type1 = `WB_PC_PLUS;
+                wb_type1 = `WB_PC;
                 alu_op = `ALU_ADD;
             end
             7'b1100111: begin //jalr
@@ -165,7 +169,7 @@ module Decoder(
                 imm_select = 1'b1;
                 jump = 1'b1;
                 write_back1 = 1'b1;
-                wb_type1 = `WB_PC_PLUS;
+                wb_type1 = `WB_PC;
                 alu_op = `ALU_ADD;
             end
             7'b0110111: begin //lui
@@ -185,6 +189,60 @@ module Decoder(
             7'b1110011: begin
                 case(inst[14:12])
                     3'b000: begin
+                        if ({inst[19:15], inst[11:7]} == 10'b0) begin
+                            case (inst[31:20])
+                                12'b000000000000: begin
+                                    reg_rs1 = `REG_MSTATUS;
+                                    reg_rs2 = `REG_MTVEC;
+                                    pc_jump = 1'b1;
+                                    jump = 1'b1;
+                                    alu_op = `ALU_STATUS;
+                                    imm_select = 1'b1;
+                                    imm = 32'b11;
+                                    imm_temp = 32'h8;
+                                    reg_rd1 = `REG_MSTATUS;
+                                    write_back1 = 1'b1;
+                                    wb_type1 = `WB_ALU;  
+                                    reg_rd2 = `REG_MCAUSE;
+                                    write_back2 = 1'b1;
+                                    wb_type2 = `WB_TEMP;
+                                    reg_rd3 = `REG_MEPC;
+                                    write_back3 = 1'b1;
+                                    wb_type3 = `WB_PC;   
+                                end
+                                12'b000000000001: begin
+                                    reg_rs1 = `REG_MSTATUS;
+                                    reg_rs2 = `REG_MTVEC;
+                                    pc_jump = 1'b1;
+                                    jump = 1'b1;
+                                    alu_op = `ALU_STATUS;
+                                    imm_select = 1'b1;
+                                    imm = 32'b11;
+                                    imm_temp = 32'h3;
+                                    reg_rd1 = `REG_MSTATUS;
+                                    write_back1 = 1'b1;
+                                    wb_type1 = `WB_ALU;  
+                                    reg_rd2 = `REG_MCAUSE;
+                                    write_back2 = 1'b1;
+                                    wb_type2 = `WB_TEMP;
+                                    reg_rd3 = `REG_MEPC;
+                                    write_back3 = 1'b1;
+                                    wb_type3 = `WB_PC; 
+                                end
+                                12'b001100000010: begin
+                                    reg_rs1 = `REG_MSTATUS;
+                                    reg_rs2 = `REG_MEPC;
+                                    pc_jump = 1'b1;
+                                    jump = 1'b1;
+                                    alu_op = `ALU_STATUS;
+                                    imm_select = 1'b1;
+                                    imm = 32'b0;
+                                    reg_rd1 = `REG_MSTATUS;
+                                    write_back1 = 1'b1;
+                                    wb_type1 = `WB_ALU;
+                                end
+                            endcase
+                        end
                     end
                     3'b001: begin // cssrw
                         reg_rs2 = inst[31:20];
@@ -199,8 +257,16 @@ module Decoder(
                         end
                     end
                     3'b010: begin // cssrs
+                        reg_rs2 = inst[31:20];
+                        alu_op = `ALU_OR;
+                        write_back1 = 1'b1; 
+                        wb_type1 = `WB_ALU;
                     end
                     3'b011: begin // cssrc
+                        reg_rs2 = inst[31:20];
+                        alu_op = `ALU_NOT_AND; 
+                        write_back1 = 1'b1; 
+                        wb_type1 = `WB_ALU;
                     end
                 endcase
             end
