@@ -30,11 +30,11 @@ module ID_EXE_Register(
         input wire          id_read_mem,
         input wire          id_mem_byte,
         input wire          id_write_back1,
-        input wire[1:0]     id_wb_type1,
+        input wire[2:0]     id_wb_type1,
         input wire          id_write_back2,
-        input wire[1:0]     id_wb_type2,
+        input wire[2:0]     id_wb_type2,
         input wire          id_write_back3,
-        input wire[1:0]     id_wb_type3,
+        input wire[2:0]     id_wb_type3,
                
         output reg[11:0]    exe_reg_rd1,
         output reg[11:0]    exe_reg_rd2,
@@ -53,11 +53,11 @@ module ID_EXE_Register(
         output reg          exe_read_mem,
         output reg          exe_mem_byte,
         output reg          exe_write_back1,
-        output reg[1:0]     exe_wb_type1,
+        output reg[2:0]     exe_wb_type1,
         output reg          exe_write_back2,
-        output reg[1:0]     exe_wb_type2,
+        output reg[2:0]     exe_wb_type2,
         output reg          exe_write_back3,
-        output reg[1:0]     exe_wb_type3
+        output reg[2:0]     exe_wb_type3
     );
     wire[1:0] reg_rs1_conflict;
     wire[1:0] reg_rs2_conflict;

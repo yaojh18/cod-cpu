@@ -133,11 +133,11 @@ wire             id_write_mem;
 wire             id_read_mem;
 wire             id_mem_byte;
 wire             id_write_back1;
-wire[1:0]        id_wb_type1;
+wire[2:0]        id_wb_type1;
 wire             id_write_back2;
-wire[1:0]        id_wb_type2;
+wire[2:0]        id_wb_type2;
 wire             id_write_back3;
-wire[1:0]        id_wb_type3;
+wire[2:0]        id_wb_type3;
 
 /* =========== ID/EXE register ========== */
 wire          reset_id_exe;
@@ -160,11 +160,11 @@ wire          exe_write_mem;
 wire          exe_read_mem;
 wire          exe_mem_byte;
 wire          exe_write_back1;
-wire[1:0]     exe_wb_type1;
+wire[2:0]     exe_wb_type1;
 wire          exe_write_back2;
-wire[1:0]     exe_wb_type2;
+wire[2:0]     exe_wb_type2;
 wire          exe_write_back3;
-wire[1:0]     exe_wb_type3;
+wire[2:0]     exe_wb_type3;
 
 assign exe_branch_choice = (exe_branch_comp==`BNE) ? ~(exe_reg_rdata1 == exe_reg_rdata2) : (exe_reg_rdata1 == exe_reg_rdata2);
 
@@ -193,11 +193,11 @@ wire          mem_write_mem;
 wire          mem_read_mem;
 wire          mem_mem_byte;
 wire          mem_write_back1;
-wire[1:0]     mem_wb_type1;
+wire[2:0]     mem_wb_type1;
 wire          mem_write_back2;
-wire[1:0]     mem_wb_type2;
+wire[2:0]     mem_wb_type2;
 wire          mem_write_back3;
-wire[1:0]     mem_wb_type3;
+wire[2:0]     mem_wb_type3;
 
 /* =========== SRAM UART =========== */
 wire        mem_oe;
@@ -223,19 +223,42 @@ wire[31:0]    wb_alu_output;
 wire[31:0]    wb_mem_data_out;
 wire[31:0]    wb_pc;
 wire          wb_write_back1;
-wire[1:0]     wb_wb_type1;
+wire[2:0]     wb_wb_type1;
 wire          wb_write_back2;
-wire[1:0]     wb_wb_type2;
+wire[2:0]     wb_wb_type2;
 wire          wb_write_back3;
-wire[1:0]     wb_wb_type3;
+wire[2:0]     wb_wb_type3;
 
 /* =========== Register file write back =========== */
-wire[31:0]    reg_wdata1;
-wire[31:0]    reg_wdata2;
-wire[31:0]    reg_wdata3;
-assign reg_wdata1 = wb_wb_type1==`WB_ALU ? wb_alu_output : (wb_wb_type1==`WB_MEM ? wb_mem_data_out : wb_pc+4);
-assign reg_wdata2 = 0;
-assign reg_wdata3 = 0;
+reg[31:0]    reg_wdata1;
+reg[31:0]    reg_wdata2;
+reg[31:0]    reg_wdata3;
+always @(*) begin
+    case (wb_wb_type1)
+        `WB_ALU: reg_wdata1 = wb_alu_output;
+        `WB_MEM: reg_wdata1 = wb_mem_data_out;
+        `WB_PC_PLUS:  reg_wdata1 = wb_pc+4;
+        `WB_PC: reg_wdata1 = wb_pc;
+        `WB_REG1: reg_wdata1 = wb_reg_rdata1;
+        `WB_REG2: reg_wdata1 = wb_reg_rdata2;
+    endcase
+    case (wb_wb_type2)
+        `WB_ALU: reg_wdata2 = wb_alu_output;
+        `WB_MEM: reg_wdata2 = wb_mem_data_out;
+        `WB_PC_PLUS:  reg_wdata2 = wb_pc+4;
+        `WB_PC: reg_wdata2 = wb_pc;
+        `WB_REG1: reg_wdata2 = wb_reg_rdata1;
+        `WB_REG2: reg_wdata2 = wb_reg_rdata2;
+    endcase
+    case (wb_wb_type3)
+        `WB_ALU: reg_wdata3 = wb_alu_output;
+        `WB_MEM: reg_wdata3 = wb_mem_data_out;
+        `WB_PC_PLUS:  reg_wdata3 = wb_pc+4;
+        `WB_PC: reg_wdata3 = wb_pc;
+        `WB_REG1: reg_wdata3 = wb_reg_rdata1;
+        `WB_REG2: reg_wdata3 = wb_reg_rdata2;
+    endcase
+end
  
 /* =========== Conflict control =========== */
 // for branch conflict

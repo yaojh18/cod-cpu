@@ -20,11 +20,11 @@ module Decoder(
     output reg              read_mem,        // also control write back data type
     output reg              mem_byte,        // 1: lb/sb, 0: lw/sw
     output reg              write_back1,     // 1: write back, 0: don't write back
-    output reg[1:0]         wb_type1,        // choose what data to write back
+    output reg[2:0]         wb_type1,        // choose what data to write back
     output reg              write_back2,     // 1: write back, 0: don't write back
-    output reg[1:0]         wb_type2,        // choose what data to write back
+    output reg[2:0]         wb_type2,        // choose what data to write back
     output reg              write_back3,     // 1: write back, 0: don't write back
-    output reg[1:0]         wb_type3         // choose what data to write back
+    output reg[2:0]         wb_type3         // choose what data to write back
     );
     
     wire sign;
@@ -157,7 +157,7 @@ module Decoder(
                 imm_select = 1'b1;
                 jump = 1'b1;
                 write_back1 = 1'b1;
-                wb_type1 = `WB_PC;
+                wb_type1 = `WB_PC_PLUS;
                 alu_op = `ALU_ADD;
             end
             7'b1100111: begin //jalr
@@ -165,7 +165,7 @@ module Decoder(
                 imm_select = 1'b1;
                 jump = 1'b1;
                 write_back1 = 1'b1;
-                wb_type1 = `WB_PC;
+                wb_type1 = `WB_PC_PLUS;
                 alu_op = `ALU_ADD;
             end
             7'b0110111: begin //lui
@@ -191,11 +191,11 @@ module Decoder(
                         reg_rd2 = inst[31:20];
                         if (reg_rd1 != 12'b0) begin
                             write_back1 = 1'b1;
-                            wb_type1 = `WB_REG;
+                            wb_type1 = `WB_REG2;
                         end
                         if (reg_rs1 != 12'b0) begin
                             write_back2 = 1'b1;
-                            wb_type2 = `WB_REG;
+                            wb_type2 = `WB_REG1;
                         end
                     end
                     3'b010: begin // cssrs

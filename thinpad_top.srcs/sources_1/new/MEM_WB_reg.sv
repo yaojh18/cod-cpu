@@ -13,11 +13,11 @@ module MEM_WB_Register(
         input wire[31:0]    mem_mem_data_out,
         input wire[31:0]    mem_pc,
         input wire          mem_write_back1,
-        input wire[1:0]     mem_wb_type1,
+        input wire[2:0]     mem_wb_type1,
         input wire          mem_write_back2,
-        input wire[1:0]     mem_wb_type2,
+        input wire[2:0]     mem_wb_type2,
         input wire          mem_write_back3,
-        input wire[1:0]     mem_wb_type3,
+        input wire[2:0]     mem_wb_type3,
         
         output reg[11:0]    wb_reg_rd1,
         output reg[11:0]    wb_reg_rd2,
@@ -28,11 +28,11 @@ module MEM_WB_Register(
         output reg[31:0]    wb_mem_data_out,
         output reg[31:0]    wb_pc,
         output reg          wb_write_back1,
-        output reg[1:0]     wb_wb_type1,
+        output reg[2:0]     wb_wb_type1,
         output reg          wb_write_back2,
-        output reg[1:0]     wb_wb_type2,
+        output reg[2:0]     wb_wb_type2,
         output reg          wb_write_back3,
-        output reg[1:0]     wb_wb_type3
+        output reg[2:0]     wb_wb_type3
     );
     
     always @(posedge clk or posedge rst) begin

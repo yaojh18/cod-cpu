@@ -16,11 +16,11 @@ module EXE_MEM_Register(
         input wire          exe_read_mem,
         input wire          exe_mem_byte,
         input wire          exe_write_back1,
-        input wire[1:0]     exe_wb_type1,
+        input wire[2:0]     exe_wb_type1,
         input wire          exe_write_back2,
-        input wire[1:0]     exe_wb_type2,
+        input wire[2:0]     exe_wb_type2,
         input wire          exe_write_back3,
-        input wire[1:0]     exe_wb_type3,
+        input wire[2:0]     exe_wb_type3,
         
         output reg[11:0]    mem_reg_rd1,
         output reg[11:0]    mem_reg_rd2,
@@ -34,11 +34,11 @@ module EXE_MEM_Register(
         output reg          mem_read_mem,
         output reg          mem_mem_byte,
         output reg          mem_write_back1,
-        output reg[1:0]     mem_wb_type1,
+        output reg[2:0]     mem_wb_type1,
         output reg          mem_write_back2,
-        output reg[1:0]     mem_wb_type2,
+        output reg[2:0]     mem_wb_type2,
         output reg          mem_write_back3,
-        output reg[1:0]     mem_wb_type3
+        output reg[2:0]     mem_wb_type3
     );
     
     always @(posedge clk or posedge rst) begin
