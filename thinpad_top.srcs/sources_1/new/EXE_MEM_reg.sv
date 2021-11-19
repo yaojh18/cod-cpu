@@ -27,10 +27,10 @@ module EXE_MEM_Register(
     
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            mem_reg_rd <= 5'b00000;
-            mem_alu_output <= 32'h00000000;
-            mem_mem_data_in <= 32'h00000000;
-            mem_pc <= 32'h00000000;
+            mem_reg_rd <= 12'b0;
+            mem_alu_output <= 32'b0;
+            mem_mem_data_in <= 32'b0;
+            mem_pc <= 32'b0;
             mem_write_mem <= 1'b0;
             mem_read_mem <= 1'b0;
             mem_mem_byte <= 1'b0;

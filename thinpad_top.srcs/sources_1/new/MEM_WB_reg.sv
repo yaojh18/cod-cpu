@@ -21,10 +21,10 @@ module MEM_WB_Register(
     
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            wb_reg_rd <= 5'b00000;
-            wb_alu_output <= 32'h00000000;
-            wb_mem_data_out <= 32'h00000000;
-            wb_pc <= 32'h00000000;
+            wb_reg_rd <= 12'b0;
+            wb_alu_output <= 32'b0;
+            wb_mem_data_out <= 32'b0;
+            wb_pc <= 32'b0;
             wb_write_back <= 1'b0;
             wb_wb_type <= `WB_ALU;
         end

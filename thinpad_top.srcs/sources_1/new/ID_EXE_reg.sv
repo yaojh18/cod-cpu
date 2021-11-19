@@ -49,16 +49,16 @@ module ID_EXE_Register(
     );
     wire[1:0] reg_rs1_conflict;
     wire[1:0] reg_rs2_conflict;
-    assign reg_rs1_conflict = (mem_exe_reg_rd != 5'b00000 && mem_exe_reg_rd == id_reg_rs1)? 2'b10: ((wb_exe_reg_rd != 5'b00000 && wb_exe_reg_rd == id_reg_rs1)? 2'b01: 2'b00);
-    assign reg_rs2_conflict = (mem_exe_reg_rd != 5'b00000 && mem_exe_reg_rd == id_reg_rs2)? 2'b10: ((wb_exe_reg_rd != 5'b00000 && wb_exe_reg_rd == id_reg_rs2)? 2'b01: 2'b00);
+    assign reg_rs1_conflict = (mem_exe_reg_rd != 12'b0 && mem_exe_reg_rd == id_reg_rs1)? 2'b10: ((wb_exe_reg_rd != 12'b0 && wb_exe_reg_rd == id_reg_rs1)? 2'b01: 2'b00);
+    assign reg_rs2_conflict = (mem_exe_reg_rd != 12'b0 && mem_exe_reg_rd == id_reg_rs2)? 2'b10: ((wb_exe_reg_rd != 12'b0 && wb_exe_reg_rd == id_reg_rs2)? 2'b01: 2'b00);
     
     always @(posedge clk or posedge rst) begin
         if(rst | delay_rst) begin
-            exe_reg_rd <= 5'b00000;
-            exe_imm <= 32'h00000000;
-            exe_reg_rdata1 <= 32'h00000000;
-            exe_reg_rdata2 <= 32'h00000000;
-            exe_pc <= 32'h00000000;
+            exe_reg_rd <= 12'b0;
+            exe_imm <= 32'b0;
+            exe_reg_rdata1 <= 32'b0;
+            exe_reg_rdata2 <= 32'b0;
+            exe_pc <= 32'b0;
             exe_alu_op <= `ALU_ADD;
             exe_pc_select <= 1'b0;
             exe_imm_select <= 1'b1;

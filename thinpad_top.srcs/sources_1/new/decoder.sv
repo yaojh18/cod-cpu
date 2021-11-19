@@ -5,8 +5,8 @@
 module Decoder(
     input wire[31:0]        inst,           // instruction
     output reg[11:0]        reg_rs1,
-    output wire[11:0]       reg_rs2,
-    output wire[11:0]       reg_rd,
+    output reg[11:0]        reg_rs2,
+    output reg[11:0]        reg_rd,
     output reg[31:0]        imm,
     output reg[3:0]         alu_op,
     output reg              pc_select,      // 1:select pc as alu_input1, 0:select reg data
@@ -27,11 +27,11 @@ module Decoder(
     assign sign = inst[31];
     assign sign_ext20 = {20{sign}};
     assign sign_ext11 = {11{sign}};
-    assign reg_rd = inst[11:7];
-    assign reg_rs2 = inst[24:20];
     
     always @(*) begin
-        reg_rs1 = inst[19:15];
+        reg_rs1 = {7'b0, inst[19:15]};
+        reg_rs2 = {7'b0, inst[24:20]};
+        reg_rd = {7'b0, inst[11:7]};
         imm = 32'h0;
         alu_op = `ALU_ZERO;
         pc_select = 1'b0;
@@ -157,7 +157,7 @@ module Decoder(
                 alu_op = `ALU_ADD;
             end
             7'b0110111: begin //lui
-                reg_rs1 = 5'b00000;     // rd = 0 + imm
+                reg_rs1 = 12'b00000;     // rd = 0 + imm
                 imm = {inst[31:12], 12'h0};
                 imm_select = 1'b1;
                 write_back = 1'b1;
