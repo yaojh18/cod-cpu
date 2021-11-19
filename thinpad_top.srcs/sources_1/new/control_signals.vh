@@ -17,6 +17,7 @@
 `define WB_ALU      2'b00
 `define WB_MEM      2'b01
 `define WB_PC       2'b10
+`define WB_REG      2'b11
 
 // branch compare type
 `define BEQ         1'b0

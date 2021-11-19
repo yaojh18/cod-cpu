@@ -6,7 +6,9 @@ module Decoder(
     input wire[31:0]        inst,           // instruction
     output reg[11:0]        reg_rs1,
     output reg[11:0]        reg_rs2,
-    output reg[11:0]        reg_rd,
+    output reg[11:0]        reg_rd1,
+    output reg[11:0]        reg_rd2,
+    output reg[11:0]        reg_rd3,
     output reg[31:0]        imm,
     output reg[3:0]         alu_op,
     output reg              pc_select,      // 1:select pc as alu_input1, 0:select reg data
@@ -15,10 +17,14 @@ module Decoder(
     output reg              branch_comp,    // branch compare type
     output reg              jump,           // unconditioned branching
     output reg              write_mem,
-    output reg              read_mem,       // also control write back data type
-    output reg              mem_byte,       // 1: lb/sb, 0: lw/sw
-    output reg              write_back,     // 1: write back, 0: don't write back
-    output reg[1:0]         wb_type         // choose what data to write back
+    output reg              read_mem,        // also control write back data type
+    output reg              mem_byte,        // 1: lb/sb, 0: lw/sw
+    output reg              write_back1,     // 1: write back, 0: don't write back
+    output reg[1:0]         wb_type1,        // choose what data to write back
+    output reg              write_back2,     // 1: write back, 0: don't write back
+    output reg[1:0]         wb_type2,        // choose what data to write back
+    output reg              write_back3,     // 1: write back, 0: don't write back
+    output reg[1:0]         wb_type3         // choose what data to write back
     );
     
     wire sign;
@@ -31,7 +37,9 @@ module Decoder(
     always @(*) begin
         reg_rs1 = {7'b0, inst[19:15]};
         reg_rs2 = {7'b0, inst[24:20]};
-        reg_rd = {7'b0, inst[11:7]};
+        reg_rd1 = {7'b0, inst[11:7]};
+        reg_rd2 = 12'b0;
+        reg_rd3 = 12'b0;
         imm = 32'h0;
         alu_op = `ALU_ZERO;
         pc_select = 1'b0;
@@ -42,11 +50,15 @@ module Decoder(
         write_mem = 1'b0;
         read_mem = 1'b0;
         mem_byte = 1'b0;
-        write_back = 1'b0;
-        wb_type = `WB_ALU;
+        write_back1 = 1'b0;
+        wb_type1 = `WB_ALU;
+        write_back2 = 1'b0;
+        wb_type2 = `WB_ALU;
+        write_back3 = 1'b0 ;
+        wb_type3 = `WB_ALU;
         case(inst[6:0])
             7'b0110011: begin //R-type
-                write_back = 1'b1;
+                write_back1 = 1'b1;
                 case({inst[31:25], inst[14:12]})
                     10'b0000000_000: alu_op = `ALU_ADD;
                     10'b0000000_111: alu_op = `ALU_AND;
@@ -58,7 +70,7 @@ module Decoder(
                 endcase
             end
             7'b0010011: begin //I-type
-                write_back = 1'b1;
+                write_back1 = 1'b1;
                 case(inst[14:12])
                     3'b000: begin
                         imm = {sign_ext20, inst[31:20]};
@@ -108,8 +120,8 @@ module Decoder(
                 alu_op = `ALU_ADD;
                 imm_select = 1'b1;
                 read_mem = 1'b1;
-                write_back = 1'b1;
-                wb_type = `WB_MEM;
+                write_back1 = 1'b1;
+                wb_type1 = `WB_MEM;
                 case(inst[14:12])
                     3'b000: mem_byte = 1'b1;    // LB
                     3'b010: mem_byte = 1'b0;    // LW
@@ -144,31 +156,53 @@ module Decoder(
                 pc_select = 1'b1;
                 imm_select = 1'b1;
                 jump = 1'b1;
-                write_back = 1'b1;
-                wb_type = `WB_PC;
+                write_back1 = 1'b1;
+                wb_type1 = `WB_PC;
                 alu_op = `ALU_ADD;
             end
             7'b1100111: begin //jalr
                 imm = {sign_ext20,inst[31:20]};
                 imm_select = 1'b1;
                 jump = 1'b1;
-                write_back = 1'b1;
-                wb_type = `WB_PC;
+                write_back1 = 1'b1;
+                wb_type1 = `WB_PC;
                 alu_op = `ALU_ADD;
             end
             7'b0110111: begin //lui
                 reg_rs1 = 12'b00000;     // rd = 0 + imm
                 imm = {inst[31:12], 12'h0};
                 imm_select = 1'b1;
-                write_back = 1'b1;
+                write_back1 = 1'b1;
                 alu_op = `ALU_ADD;
             end
             7'b0010111: begin //auipc
                 imm = {inst[31:12], 12'h0};
                 pc_select = 1'b1;
                 imm_select = 1'b1;
-                write_back = 1'b1;
+                write_back1 = 1'b1;
                 alu_op = `ALU_ADD;
+            end
+            7'b1110011: begin
+                case(inst[14:12])
+                    3'b000: begin
+                    end
+                    3'b001: begin // cssrw
+                        reg_rs2 = inst[31:20];
+                        reg_rd2 = inst[31:20];
+                        if (reg_rd1 != 12'b0) begin
+                            write_back1 = 1'b1;
+                            wb_type1 = `WB_REG;
+                        end
+                        if (reg_rs1 != 12'b0) begin
+                            write_back2 = 1'b1;
+                            wb_type2 = `WB_REG;
+                        end
+                    end
+                    3'b010: begin // cssrs
+                    end
+                    3'b011: begin // cssrc
+                    end
+                endcase
             end
         endcase 
     end

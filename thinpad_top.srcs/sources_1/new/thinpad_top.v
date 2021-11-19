@@ -117,7 +117,9 @@ wire[31:0] id_pc;
 /* =========== Decoder =========== */
 wire[11:0]       id_reg_rs1;
 wire[11:0]       id_reg_rs2;
-wire[11:0]       id_reg_rd;
+wire[11:0]       id_reg_rd1;
+wire[11:0]       id_reg_rd2;
+wire[11:0]       id_reg_rd3;
 wire[31:0]       id_reg_rdata1;
 wire[31:0]       id_reg_rdata2;
 wire[31:0]       id_imm;
@@ -130,13 +132,19 @@ wire             id_jump;
 wire             id_write_mem;
 wire             id_read_mem;
 wire             id_mem_byte;
-wire             id_write_back;
-wire[1:0]        id_wb_type;
+wire             id_write_back1;
+wire[1:0]        id_wb_type1;
+wire             id_write_back2;
+wire[1:0]        id_wb_type2;
+wire             id_write_back3;
+wire[1:0]        id_wb_type3;
 
 /* =========== ID/EXE register ========== */
 wire          reset_id_exe;
 assign reset_id_exe = reset_of_clk10M;
-wire[11:0]    exe_reg_rd;
+wire[11:0]    exe_reg_rd1;
+wire[11:0]    exe_reg_rd2;
+wire[11:0]    exe_reg_rd3;
 wire[31:0]    exe_imm;
 wire[31:0]    exe_reg_rdata1;
 wire[31:0]    exe_reg_rdata2;
@@ -151,8 +159,13 @@ wire          exe_jump;
 wire          exe_write_mem;
 wire          exe_read_mem;
 wire          exe_mem_byte;
-wire          exe_write_back;
-wire[1:0]     exe_wb_type;
+wire          exe_write_back1;
+wire[1:0]     exe_wb_type1;
+wire          exe_write_back2;
+wire[1:0]     exe_wb_type2;
+wire          exe_write_back3;
+wire[1:0]     exe_wb_type3;
+
 assign exe_branch_choice = (exe_branch_comp==`BNE) ? ~(exe_reg_rdata1 == exe_reg_rdata2) : (exe_reg_rdata1 == exe_reg_rdata2);
 
 /* =========== ALU ============*/
@@ -168,15 +181,23 @@ wire          reset_exe_mem;
 assign reset_exe_mem = reset_of_clk10M ;
 wire[31:0]    exe_mem_data_in;
 assign exe_mem_data_in = exe_reg_rdata2;
-wire[11:0]    mem_reg_rd;
+wire[11:0]    mem_reg_rd1;
+wire[11:0]    mem_reg_rd2;
+wire[11:0]    mem_reg_rd3;
+wire[31:0]    mem_reg_rdata1;
+wire[31:0]    mem_reg_rdata2;
 wire[31:0]    mem_alu_output;
 wire[31:0]    mem_mem_data_in;
 wire[31:0]    mem_pc;
 wire          mem_write_mem;
 wire          mem_read_mem;
 wire          mem_mem_byte;
-wire          mem_write_back;
-wire[1:0]     mem_wb_type;
+wire          mem_write_back1;
+wire[1:0]     mem_wb_type1;
+wire          mem_write_back2;
+wire[1:0]     mem_wb_type2;
+wire          mem_write_back3;
+wire[1:0]     mem_wb_type3;
 
 /* =========== SRAM UART =========== */
 wire        mem_oe;
@@ -193,27 +214,39 @@ assign mem_address = (mem_read_mem | mem_write_mem) ? mem_alu_output : pc;
 /* =========== MEM/WB register ============ */
 wire          reset_mem_wb;
 assign reset_mem_wb = reset_of_clk10M;
-wire[11:0]     wb_reg_rd;
+wire[11:0]    wb_reg_rd1;
+wire[11:0]    wb_reg_rd2;
+wire[11:0]    wb_reg_rd3;
+wire[31:0]    wb_reg_rdata1;
+wire[31:0]    wb_reg_rdata2;
 wire[31:0]    wb_alu_output;
 wire[31:0]    wb_mem_data_out;
 wire[31:0]    wb_pc;
-wire          wb_write_back;
-wire[1:0]     wb_wb_type;
+wire          wb_write_back1;
+wire[1:0]     wb_wb_type1;
+wire          wb_write_back2;
+wire[1:0]     wb_wb_type2;
+wire          wb_write_back3;
+wire[1:0]     wb_wb_type3;
 
 /* =========== Register file write back =========== */
-wire[31:0]    reg_wdata;
-assign reg_wdata = wb_wb_type==`WB_ALU ? wb_alu_output : (wb_wb_type==`WB_MEM ? wb_mem_data_out : wb_pc+4);
-
+wire[31:0]    reg_wdata1;
+wire[31:0]    reg_wdata2;
+wire[31:0]    reg_wdata3;
+assign reg_wdata1 = wb_wb_type1==`WB_ALU ? wb_alu_output : (wb_wb_type1==`WB_MEM ? wb_mem_data_out : wb_pc+4);
+assign reg_wdata2 = 0;
+assign reg_wdata3 = 0;
+ 
 /* =========== Conflict control =========== */
 // for branch conflict
 wire branch_delay_rst;
 assign branch_delay_rst = exe_jump | (exe_branch & exe_branch_choice);
 wire load_delay;
-assign load_delay = exe_read_mem && (exe_reg_rd == id_reg_rs1 || exe_reg_rd == id_reg_rs2);
+assign load_delay = exe_read_mem && (exe_reg_rd1 == id_reg_rs1 || exe_reg_rd1 == id_reg_rs2);
 
 // for data conflict
 wire[31:0] wb_exe_reg_data;
-assign wb_exe_reg_data = mem_wb_type==`WB_ALU ? mem_alu_output : (mem_wb_type==`WB_MEM ? mem_mem_data_out : mem_pc+4);
+assign wb_exe_reg_data = mem_wb_type1==`WB_ALU ? mem_alu_output : (mem_wb_type1==`WB_MEM ? mem_mem_data_out : mem_pc+4);
 
 /* ================== IF module =================== */
 assign pc_next = branch_delay_rst ? exe_alu_output : ((mem_write_mem | mem_read_mem | load_delay) ? pc : pc+4);
@@ -241,7 +274,9 @@ Decoder decoder(
     .inst(id_instruction),
     .reg_rs1(id_reg_rs1),
     .reg_rs2(id_reg_rs2),
-    .reg_rd(id_reg_rd),
+    .reg_rd1(id_reg_rd1),
+    .reg_rd2(id_reg_rd2),
+    .reg_rd3(id_reg_rd3),
     .imm(id_imm),
     .alu_op(id_alu_op),
     .pc_select(id_pc_select),
@@ -252,22 +287,26 @@ Decoder decoder(
     .write_mem(id_write_mem),
     .read_mem(id_read_mem),
     .mem_byte(id_mem_byte),
-    .write_back(id_write_back),
-    .wb_type(id_wb_type)
+    .write_back1(id_write_back1),
+    .wb_type1(id_wb_type1),
+    .write_back2(id_write_back2),
+    .wb_type2(id_wb_type2),
+    .write_back3(id_write_back3),
+    .wb_type3(id_wb_type3)
 );
 
 RegFile reg_file(
     .clk(clk_10M),
     .rst(reset_of_clk10M),
-    .we1(wb_write_back),
-    .waddr1(wb_reg_rd),
-    .wdata1(reg_wdata),
-    .we2(0),
-    .waddr2(0),
-    .wdata2(0),
-    .we3(0),
-    .waddr3(0),
-    .wdata3(0),
+    .we1(wb_write_back1),
+    .waddr1(wb_reg_rd1),
+    .wdata1(reg_wdata1),
+    .we2(wb_write_back2),
+    .waddr2(wb_reg_rd2),
+    .wdata2(reg_wdata2),
+    .we3(wb_write_back3),
+    .waddr3(wb_reg_rd3),
+    .wdata3(reg_wdata3),
     .raddr1(id_reg_rs1),
     .raddr2(id_reg_rs2),
     .rdata1(id_reg_rdata1),
@@ -279,11 +318,13 @@ ID_EXE_Register id_exe_reg(
     .clk(clk_10M),
     .rst(reset_id_exe),
     .delay_rst(branch_delay_rst | load_delay),
-    .mem_exe_reg_rd(exe_reg_rd & {12{exe_write_back}}),
-    .wb_exe_reg_rd(mem_reg_rd & {12{mem_write_back}}),
+    .mem_exe_reg_rd(exe_reg_rd1 & {12{exe_write_back1}}),
+    .wb_exe_reg_rd(mem_reg_rd1 & {12{mem_write_back1}}),
     .mem_exe_reg_data(exe_alu_output),
     .wb_exe_reg_data(wb_exe_reg_data),
-    .id_reg_rd(id_reg_rd),
+    .id_reg_rd1(id_reg_rd1),
+    .id_reg_rd2(id_reg_rd2),
+    .id_reg_rd3(id_reg_rd3),
     .id_reg_rs1(id_reg_rs1),
     .id_reg_rs2(id_reg_rs2),
     .id_imm(id_imm),
@@ -299,9 +340,15 @@ ID_EXE_Register id_exe_reg(
     .id_write_mem(id_write_mem),
     .id_read_mem(id_read_mem),
     .id_mem_byte(id_mem_byte),
-    .id_write_back(id_write_back),
-    .id_wb_type(id_wb_type),
-    .exe_reg_rd(exe_reg_rd),
+    .id_write_back1(id_write_back1),
+    .id_wb_type1(id_wb_type1),
+    .id_write_back2(id_write_back2),
+    .id_wb_type2(id_wb_type2),
+    .id_write_back3(id_write_back3),
+    .id_wb_type3(id_wb_type3),
+    .exe_reg_rd1(exe_reg_rd1),
+    .exe_reg_rd2(exe_reg_rd2),
+    .exe_reg_rd3(exe_reg_rd3),
     .exe_imm(exe_imm),
     .exe_reg_rdata1(exe_reg_rdata1),
     .exe_reg_rdata2(exe_reg_rdata2),
@@ -315,8 +362,12 @@ ID_EXE_Register id_exe_reg(
     .exe_write_mem(exe_write_mem),
     .exe_read_mem(exe_read_mem),
     .exe_mem_byte(exe_mem_byte),
-    .exe_write_back(exe_write_back),
-    .exe_wb_type(exe_wb_type)
+    .exe_write_back1(exe_write_back1),
+    .exe_wb_type1(exe_wb_type1),
+    .exe_write_back2(exe_write_back2),
+    .exe_wb_type2(exe_wb_type2),
+    .exe_write_back3(exe_write_back3),
+    .exe_wb_type3(exe_wb_type3)
 );
 
 ALU alu(
@@ -330,24 +381,40 @@ ALU alu(
 EXE_MEM_Register exe_mem_reg(
     .clk(clk_10M),
     .rst(reset_exe_mem),
-    .exe_reg_rd(exe_reg_rd),
+    .exe_reg_rd1(exe_reg_rd1),
+    .exe_reg_rd2(exe_reg_rd2),
+    .exe_reg_rd3(exe_reg_rd3),
+    .exe_reg_rdata1(exe_reg_rdata1),
+    .exe_reg_rdata2(exe_reg_rdata2),
     .exe_alu_output(exe_alu_output),
     .exe_mem_data_in(exe_mem_data_in),
     .exe_pc(exe_pc),
     .exe_write_mem(exe_write_mem),
     .exe_read_mem(exe_read_mem),
     .exe_mem_byte(exe_mem_byte),
-    .exe_write_back(exe_write_back),
-    .exe_wb_type(exe_wb_type),
-    .mem_reg_rd(mem_reg_rd),
+    .exe_write_back1(exe_write_back1),
+    .exe_wb_type1(exe_wb_type1),
+    .exe_write_back2(exe_write_back2),
+    .exe_wb_type2(exe_wb_type2),
+    .exe_write_back3(exe_write_back3),
+    .exe_wb_type3(exe_wb_type3),
+    .mem_reg_rd1(mem_reg_rd1),
+    .mem_reg_rd2(mem_reg_rd2),
+    .mem_reg_rd3(mem_reg_rd3),
+    .mem_reg_rdata1(mem_reg_rdata1),
+    .mem_reg_rdata2(mem_reg_rdata2),
     .mem_alu_output(mem_alu_output),
     .mem_mem_data_in(mem_mem_data_in),
     .mem_pc(mem_pc),
     .mem_write_mem(mem_write_mem),
     .mem_read_mem(mem_read_mem),
     .mem_mem_byte(mem_mem_byte),
-    .mem_write_back(mem_write_back),
-    .mem_wb_type(mem_wb_type)
+    .mem_write_back1(mem_write_back1),
+    .mem_wb_type1(mem_wb_type1),
+    .mem_write_back2(mem_write_back2),
+    .mem_wb_type2(mem_wb_type2),
+    .mem_write_back3(mem_write_back2),
+    .mem_wb_type3(mem_wb_type2)
 );
 
 SRAMUARTController sram_uart_controller(
@@ -387,17 +454,33 @@ SRAMUARTController sram_uart_controller(
 MEM_WB_Register mem_wb_reg(
     .clk(clk_10M),
     .rst(reset_mem_wb),
-    .mem_reg_rd(mem_reg_rd),
+    .mem_reg_rd1(mem_reg_rd1),
+    .mem_reg_rd2(mem_reg_rd2),
+    .mem_reg_rd3(mem_reg_rd3),
+    .mem_reg_rdata1(mem_reg_rdata1),
+    .mem_reg_rdata2(mem_reg_rdata2),
     .mem_alu_output(mem_alu_output),
     .mem_mem_data_out(mem_mem_data_out),
     .mem_pc(mem_pc),
-    .mem_write_back(mem_write_back),
-    .mem_wb_type(mem_wb_type),
-    .wb_reg_rd(wb_reg_rd),
+    .mem_write_back1(mem_write_back1),
+    .mem_wb_type1(mem_wb_type1),
+    .mem_write_back2(mem_write_back2),
+    .mem_wb_type2(mem_wb_type2),
+    .mem_write_back3(mem_write_back3),
+    .mem_wb_type3(mem_wb_type3),
+    .wb_reg_rd1(wb_reg_rd1),
+    .wb_reg_rd2(wb_reg_rd2),
+    .wb_reg_rd3(wb_reg_rd3),
+    .wb_reg_rdata1(wb_reg_rdata1),
+    .wb_reg_rdata2(wb_reg_rdata2),
     .wb_alu_output(wb_alu_output),
     .wb_mem_data_out(wb_mem_data_out),
     .wb_pc(wb_pc),
-    .wb_write_back(wb_write_back),
-    .wb_wb_type(wb_wb_type)
+    .wb_write_back1(wb_write_back1),
+    .wb_wb_type1(wb_wb_type1),
+    .wb_write_back2(wb_write_back2),
+    .wb_wb_type2(wb_wb_type2),
+    .wb_write_back3(wb_write_back3),
+    .wb_wb_type3(wb_wb_type3)
 );
 endmodule

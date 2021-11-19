@@ -13,7 +13,9 @@ module ID_EXE_Register(
         
         input wire[11:0]    id_reg_rs1,
         input wire[11:0]    id_reg_rs2,
-        input wire[11:0]    id_reg_rd,
+        input wire[11:0]    id_reg_rd1,
+        input wire[11:0]    id_reg_rd2,
+        input wire[11:0]    id_reg_rd3,
         input wire[31:0]    id_imm,
         input wire[31:0]    id_reg_rdata1,
         input wire[31:0]    id_reg_rdata2,
@@ -27,10 +29,16 @@ module ID_EXE_Register(
         input wire          id_write_mem,
         input wire          id_read_mem,
         input wire          id_mem_byte,
-        input wire          id_write_back,
-        input wire[1:0]     id_wb_type,
+        input wire          id_write_back1,
+        input wire[1:0]     id_wb_type1,
+        input wire          id_write_back2,
+        input wire[1:0]     id_wb_type2,
+        input wire          id_write_back3,
+        input wire[1:0]     id_wb_type3,
                
-        output reg[11:0]    exe_reg_rd,
+        output reg[11:0]    exe_reg_rd1,
+        output reg[11:0]    exe_reg_rd2,
+        output reg[11:0]    exe_reg_rd3,
         output reg[31:0]    exe_imm,
         output reg[31:0]    exe_reg_rdata1,
         output reg[31:0]    exe_reg_rdata2,
@@ -44,8 +52,12 @@ module ID_EXE_Register(
         output reg          exe_write_mem,
         output reg          exe_read_mem,
         output reg          exe_mem_byte,
-        output reg          exe_write_back,
-        output reg[1:0]     exe_wb_type
+        output reg          exe_write_back1,
+        output reg[1:0]     exe_wb_type1,
+        output reg          exe_write_back2,
+        output reg[1:0]     exe_wb_type2,
+        output reg          exe_write_back3,
+        output reg[1:0]     exe_wb_type3
     );
     wire[1:0] reg_rs1_conflict;
     wire[1:0] reg_rs2_conflict;
@@ -54,7 +66,9 @@ module ID_EXE_Register(
     
     always @(posedge clk or posedge rst) begin
         if(rst | delay_rst) begin
-            exe_reg_rd <= 12'b0;
+            exe_reg_rd1 <= 12'b0;
+            exe_reg_rd2 <= 12'b0;
+            exe_reg_rd3 <= 12'b0;
             exe_imm <= 32'b0;
             exe_reg_rdata1 <= 32'b0;
             exe_reg_rdata2 <= 32'b0;
@@ -68,8 +82,12 @@ module ID_EXE_Register(
             exe_write_mem <= 1'b0;
             exe_read_mem <= 1'b0;
             exe_mem_byte <= 1'b0;
-            exe_write_back <= 1'b1;
-            exe_wb_type <= `WB_ALU;
+            exe_write_back1 <= 1'b0;
+            exe_wb_type1 <= `WB_ALU;
+            exe_write_back2 <= 1'b0;
+            exe_wb_type2 <= `WB_ALU;
+            exe_write_back3 <= 1'b0;
+            exe_wb_type3 <= `WB_ALU;
         end
         else begin
             if(reg_rs1_conflict == 2'b10)
@@ -84,7 +102,9 @@ module ID_EXE_Register(
                 exe_reg_rdata2 <= wb_exe_reg_data;
             else
                 exe_reg_rdata2 <= id_reg_rdata2;
-            exe_reg_rd <= id_reg_rd;
+            exe_reg_rd1 <= id_reg_rd1;
+            exe_reg_rd2 <= id_reg_rd2;
+            exe_reg_rd3 <= id_reg_rd3;
             exe_imm <= id_imm;
             exe_pc <= id_pc;
             exe_alu_op <= id_alu_op;
@@ -96,8 +116,12 @@ module ID_EXE_Register(
             exe_write_mem <= id_write_mem;
             exe_read_mem <= id_read_mem;
             exe_mem_byte <= id_mem_byte;
-            exe_write_back <= id_write_back;
-            exe_wb_type <= id_wb_type;
+            exe_write_back1 <= id_write_back1;
+            exe_wb_type1 <= id_wb_type1;
+            exe_write_back2 <= id_write_back2;
+            exe_wb_type2 <= id_wb_type2;
+            exe_write_back3 <= id_write_back3;
+            exe_wb_type3 <= id_wb_type3;
         end
     end
 endmodule
