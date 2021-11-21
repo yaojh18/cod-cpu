@@ -21,3 +21,17 @@
 // branch compare type
 `define BEQ         1'b0
 `define BNE         1'b1
+
+`define REG_MSTATUS   12'h300
+`define REG_MTVEC     12'h305
+`define REG_MSCRATCH  12'h340
+`define REG_MEPC      12'h341
+`define REG_MCAUSE    12'h342
+`define REG_MIE       12'h342
+`define REG_MIP       12'h342
+`define REG_MTIME     12'h342
+`define REG_MTIMECMP  12'h342
+`define REG_SATP      12'h342
+
+
+

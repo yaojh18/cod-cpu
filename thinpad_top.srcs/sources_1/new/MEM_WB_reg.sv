@@ -4,14 +4,14 @@
 module MEM_WB_Register(
         input wire          clk,
         input wire          rst,
-        input wire[11:0]    mem_reg_rd,
+        input wire[4:0]     mem_reg_rd,
         input wire[31:0]    mem_alu_output,
         input wire[31:0]    mem_mem_data_out,
         input wire[31:0]    mem_pc,
         input wire          mem_write_back,
         input wire[1:0]     mem_wb_type,
         
-        output reg[11:0]    wb_reg_rd,
+        output reg[4:0]     wb_reg_rd,
         output reg[31:0]    wb_alu_output,
         output reg[31:0]    wb_mem_data_out,
         output reg[31:0]    wb_pc,

@@ -6,14 +6,14 @@ module ID_EXE_Register(
         input wire          rst,
         input wire          delay_rst,
         
-        input wire[11:0]    mem_exe_reg_rd,
-        input wire[11:0]    wb_exe_reg_rd,
+        input wire[4:0]     mem_exe_reg_rd,
+        input wire[4:0]     wb_exe_reg_rd,
         input wire[31:0]    mem_exe_reg_data,
         input wire[31:0]    wb_exe_reg_data,
         
-        input wire[11:0]    id_reg_rs1,
-        input wire[11:0]    id_reg_rs2,
-        input wire[11:0]    id_reg_rd,
+        input wire[4:0]     id_reg_rs1,
+        input wire[4:0]     id_reg_rs2,
+        input wire[4:0]     id_reg_rd,
         input wire[31:0]    id_imm,
         input wire[31:0]    id_reg_rdata1,
         input wire[31:0]    id_reg_rdata2,
@@ -30,7 +30,7 @@ module ID_EXE_Register(
         input wire          id_write_back,
         input wire[1:0]     id_wb_type,
                
-        output reg[11:0]    exe_reg_rd,
+        output reg[4:0]     exe_reg_rd,
         output reg[31:0]    exe_imm,
         output reg[31:0]    exe_reg_rdata1,
         output reg[31:0]    exe_reg_rdata2,

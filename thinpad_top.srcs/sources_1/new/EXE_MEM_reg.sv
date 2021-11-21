@@ -4,7 +4,7 @@
 module EXE_MEM_Register(
         input wire          clk,
         input wire          rst,
-        input wire[11:0]    exe_reg_rd,
+        input wire[4:0]     exe_reg_rd,
         input wire[31:0]    exe_alu_output,
         input wire[31:0]    exe_mem_data_in,
         input wire[31:0]    exe_pc,
@@ -14,7 +14,7 @@ module EXE_MEM_Register(
         input wire          exe_write_back,
         input wire[1:0]     exe_wb_type,
         
-        output reg[11:0]    mem_reg_rd,
+        output reg[4:0]     mem_reg_rd,
         output reg[31:0]    mem_alu_output,
         output reg[31:0]    mem_mem_data_in,
         output reg[31:0]    mem_pc,
