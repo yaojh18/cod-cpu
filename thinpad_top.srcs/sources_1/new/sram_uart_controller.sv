@@ -49,7 +49,7 @@ module SRAMUARTController(
     assign check_uart_state = (address == 32'h10000005);
     assign uart_state = {2'b00, uart_tsre, 4'b0000, uart_dataready};
     
-    assign use_ext = (address >= 32'h80004000);
+    assign use_ext = (address >= 32'h80400000);
     assign base_ram_data_wire = data_z ? 32'bz : (ram_in_data << {byte_offset,3'b000});
     assign ext_ram_data_wire = data_z ? 32'bz : (ram_in_data << {byte_offset,3'b000});
     assign base_ram_addr = address[21:2];
